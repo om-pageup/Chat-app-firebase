@@ -1,0 +1,36 @@
+<div class="chat-container">
+
+    <!-- header -->
+    <div class="row mx-0 header">
+        <div class="col-1 image-section">
+            <img src="../../../../assets/jethalal_1621940926.jpg" width="40px" height="40px" alt="">
+        </div>
+
+        <div class="col-10 name-section">
+            <div>
+                <h5>Jethalal</h5>
+                <small>Online</small>
+            </div>
+        </div>
+
+        <div class="col-1 option-bar">
+            <i class='bx bx-menu'></i>
+        </div>
+    </div>
+
+    <div class="row mx-0 body">
+        <div class="chat-container">
+            <div class="message-box" *ngFor="let chats of messageList"
+                [ngClass]="{'friend-message': recevierId === chats.senderId , 'my-message': recevierId !== chats.senderId}">
+                <p>{{chats.message}}<br><span>07:43</span></p>
+            </div>
+        </div>
+
+        <!-- footer -->
+        <div class="row mx-0 footer">
+            <div class="message-box">
+                <i class='bx bx-smile'></i>
+                <input type="text" placeholder="Type a message" [(ngModel)]="message" (keydown.enter)="sendMessage()">
+            </div>
+        </div>
+    </div>
