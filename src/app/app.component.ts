@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FirebaseService } from '../services/firebase.service';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,14 @@ import { Component } from '@angular/core';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
+
   title = 'QuickChat';
+  constructor(private firebaseService: FirebaseService) {
+    this.firebaseService.requestPermission();
+    this.firebaseService.listen();
+
+    setTimeout(() => {
+      this.firebaseService.sendNotification()
+    }, 5000);
+  }
 }
