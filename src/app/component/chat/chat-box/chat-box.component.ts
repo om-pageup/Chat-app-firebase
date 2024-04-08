@@ -40,32 +40,13 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
       this.postAPICallPromise<{ message: string }, GetLoggedInUserDetailI<null>>(APIRoutes.sendMessage(this.recevierId), data, this.headerOption).then(
         (res) => {
           this.getChatById(this.recevierId);
-          this.firebaseService.sendNotification({receiverSystemToken: this.receiverStystemToken, title: "hyyyy", body: this.message});
+          this.firebaseService.sendNotification({receiverSystemToken: this.receiverStystemToken, title: "WhatsApp", body: this.message}, this._utilService.loggedInUserId);
         }
       )
       this.message = '';
     }
     
   }
-
-
-  // private sendNotification(){
-  //   this.headerOption.isSendNotification = true;
-
-  //   const notification: Notification = {
-  //     notification: {
-  //       title: 'whatsaap',
-  //       body: "new message"
-  //     },
-  //     to:this.receiverStystemToken
-  //   }
-  //   this.postAPICallPromise<Notification,ReceiveNotificationI>(APIRoutes.sendNotification,notification,this.headerOption).then(
-  //     (res)=>{
-  //       console.log(res);
-  //     }
-  //   )
-  // }
-
 
   private getChatById(id: number) {
     const options: GetMessagePaginationI = {

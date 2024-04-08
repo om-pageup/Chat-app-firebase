@@ -5,14 +5,18 @@ import { ComponentBase } from '../shared/class/ComponentBase.class';
 import { GetLoggedInUserDetailI } from '../app/response/responseG.response';
 import { APIRoutes } from '../shared/constants/apiRoutes.constant';
 import { INotificationModel } from '../app/model/notification.model';
+import { UtilService } from './util.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FirebaseService extends ComponentBase {
 
+  constructor(private _utilService: UtilService){
+    super();
+  }
 
-  requestPermission() {
+  public requestPermission() {
     const messaging = getMessaging();
     getToken(messaging,
       { vapidKey: environment.firebase.vapidKey }).then(
@@ -28,18 +32,20 @@ export class FirebaseService extends ComponentBase {
           console.log('An error occurred while retrieving token. ', err);
         });
   }
-  listen() {
+
+  public listen() {
     const messaging = getMessaging();
     onMessage(messaging, (payload) => {
       console.log('Message received. ', payload);
-      // this.message = payload;
+      this._utilService.getChatByIdE.emit(this._utilService.receiverId);
     });
   }
 
 
-  sendNotification(obj: { receiverSystemToken: string, title: string, body: string }) {
-    console.log(obj);
-    
+  public sendNotification(obj: { receiverSystemToken: string, title: string, body: string }, loggedInUserId: number) {
+
+    this._utilService.receiverId = loggedInUserId;
+
     const url = 'https://fcm.googleapis.com/fcm/send';
     const newMsg: INotificationModel = {
       notification: {
@@ -49,13 +55,6 @@ export class FirebaseService extends ComponentBase {
 
       to: obj.receiverSystemToken
     }
-    // const data: INotificationModel = {
-    //   notification: {
-    //     title: obj.title,
-    //     body: obj.body
-    //   },
-    //   to: obj.receiverSystemToken
-    // };
 
     fetch(url, {
       method: 'POST',
