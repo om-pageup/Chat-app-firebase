@@ -23,10 +23,11 @@ export class ChatListComponent extends ComponentBase implements OnInit {
   }
 
 
-  public getChats(id: number){
+  public getChats(id: number,allChat:ChatBoxI){
     console.log(id);
     this._utilService.currentOpenedChat = id;
     this._utilService.getChatByIdE.emit(id);
+    this._utilService.getChat.emit(allChat);
   }
 
   private getChatBox(){

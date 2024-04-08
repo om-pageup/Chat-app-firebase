@@ -8,7 +8,7 @@
         <a *ngFor="let chat of chatBoxList" class="list-group-item list-group-item-action c-p-s" aria-current="true">
 
             <ng-container *ngIf="_utilService.loggedInUserId != chat.recieverId; else otherU" >
-                <div  (click)="getChats(chat.recieverId)">
+                <div  (click)="getChats(chat.recieverId,chat)">
                     <div class="d-flex w-100 justify-content-between">
                     <h5 class="mb-1">{{chat.recieverName}}</h5>
                         <span class="badge bg-primary rounded-pill">{{chat.newMessages}}</span>
@@ -18,7 +18,7 @@
             </ng-container>
 
             <ng-template #otherU >
-                <div (click)="getChats(chat.employeeId)">
+                <div (click)="getChats(chat.employeeId,chat)">
                     <div class="d-flex w-100 justify-content-between"  >
                         <h5 class="mb-1">{{chat.employeeName}}</h5>
                         <span class="badge bg-primary rounded-pill">{{chat.newMessages}}</span>
