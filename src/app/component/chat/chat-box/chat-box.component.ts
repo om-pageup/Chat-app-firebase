@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { GetLoggedInUserDetailI, GetMessageI, ResponseGI, ResponseIterableI } from '../../../response/responseG.response';
 import { ChatBoxI, MessageI } from '../../../model/chat.model';
 import { GetMessagePaginationI } from '../../../model/pagination.model';
@@ -13,6 +13,9 @@ import { FirebaseService } from '../../../../services/firebase.service';
   styleUrl: './chat-box.component.scss'
 })
 export class ChatBoxComponent extends ComponentBase implements OnInit {
+  @ViewChild('scrollframe', { static: false }) scrollFrame!: ElementRef;
+  @ViewChildren('item') itemElements!: QueryList<any>;
+  private scrollContainer: any;
 
   public messageList: MessageI[] = [];
   public recevierId: number = -1;
@@ -46,6 +49,23 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
       this.message = '';
     }
     
+  }
+
+  ngAfterViewInit() {
+    this.scrollContainer = this.scrollFrame.nativeElement;  
+    this.itemElements.changes.subscribe(_ => this.onItemElementsChanged());    
+  }
+  
+  private onItemElementsChanged(): void {
+    this.scrollToBottom();
+  }
+
+  private scrollToBottom(): void {
+    this.scrollContainer.scroll({
+      top: this.scrollContainer.scrollHeight,
+      left: 0,
+      behavior: 'smooth'
+    });
   }
 
   private getChatById(id: number) {

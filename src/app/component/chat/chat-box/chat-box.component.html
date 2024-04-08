@@ -19,8 +19,8 @@
     </div>
 
     <div class="row mx-0 body">
-        <div class="chat-container">
-            <div class="message-box" *ngFor="let chats of messageList"
+        <div class="chat-container" #scrollframe >
+            <div class="message-box" *ngFor="let chats of messageList" #item
                 [ngClass]="{'friend-message': recevierId === chats.senderId , 'my-message': recevierId !== chats.senderId}">
                 <p>{{chats.message}}<br><span>07:43</span></p>
             </div>
