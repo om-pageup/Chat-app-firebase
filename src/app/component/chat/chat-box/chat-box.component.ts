@@ -43,7 +43,7 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
       this.postAPICallPromise<{ message: string }, GetLoggedInUserDetailI<null>>(APIRoutes.sendMessage(this.recevierId), data, this.headerOption).then(
         (res) => {
           this.getChatById(this.recevierId);
-          this.firebaseService.sendNotification({receiverSystemToken: this.receiverStystemToken, title: "WhatsApp", body: "New Message"});
+          this.firebaseService.sendNotification({receiverSystemToken: this.receiverStystemToken, title: "WhatsApp", body: this.message});
         }
       )
       this.message = '';
