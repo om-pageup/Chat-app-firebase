@@ -5,6 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ComponentBase } from '../shared/class/ComponentBase.class';
 import { GetLoggedInUserDetailI, ResponseGI } from '../app/response/responseG.response';
 import { APIRoutes } from '../shared/constants/apiRoutes.constant';
+import { INotification } from '../app/model/notification.model';
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +40,7 @@ export class FirebaseService extends ComponentBase {
 
   sendNotification(obj: { receiverSystemToken: string, title: string, body: string }) {
     const url = 'https://fcm.googleapis.com/fcm/send';
-    const data = {
+    const data: INotification = {
       notification: {
         title: obj.title,
         body: obj.body
