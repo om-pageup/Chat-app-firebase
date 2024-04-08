@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { GetLoggedInUserDetailI, GetMessageI, ResponseGI, ResponseIterableI } from '../../../response/responseG.response';
+import { GetLoggedInUserDetailI, GetMessageI } from '../../../response/responseG.response';
 import { ChatBoxI, MessageI } from '../../../model/chat.model';
 import { GetMessagePaginationI } from '../../../model/pagination.model';
 import { ComponentBase } from '../../../../shared/class/ComponentBase.class';
@@ -16,6 +16,11 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
   @ViewChild('scrollframe', { static: false }) scrollFrame!: ElementRef;
   @ViewChildren('item') itemElements!: QueryList<any>;
   private scrollContainer: any;
+  public isScrollToBottom: boolean = true;
+  public isSendMsg: boolean = false;
+
+
+  public preScrollH: number = 0;
 
   private options: GetMessagePaginationI = {
     isPagination: true,
@@ -67,6 +72,9 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
 
   public sendMessage() {
     console.log(this.message);
+    this.options.index = 0;
+    this.isScrollToBottom = true;
+    this.isSendMsg = true;
     if (this.message.trim().length > 0) {
       const data: { message: string } = {
         message: this.message.trim()
@@ -74,7 +82,7 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
       this.postAPICallPromise<{ message: string }, GetLoggedInUserDetailI<null>>(APIRoutes.sendMessage(this.recevierId), data, this.headerOption).then(
         (res) => {
           this.getChatById(this.recevierId);
-          this.firebaseService.sendNotification({ receiverSystemToken: this.receiverStystemToken, title: "WhatsApp", body: this.message }, this._utilService.loggedInUserId);
+          this.firebaseService.sendNotification({ receiverSystemToken: this.receiverStystemToken, title: "WhatsApp", body: data.message }, this._utilService.loggedInUserId);
         }
       )
       this.message = '';
@@ -86,17 +94,30 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
     console.log(event);
     const scrolltop = this.scrollFrame.nativeElement.scrollTop;
     const isAtBottom = this.scrollFrame.nativeElement.scrollHeight * 0.1;
-    let isApiCall:boolean=false;
-    if(scrolltop<= isAtBottom){
-      this.options.index++;
+
+    if(scrolltop == 0){
+      this.options.index ++;
       this.getChatById(0);
-      // this.isApiCall=true;
     }
+
+    // let isApiCall:boolean=false;
+    // if(scrolltop<= isAtBottom){
+    //   this.options.index++;
+    //   this.getChatById(0);
+    //   // this.isApiCall=true;
+    // }
   }
 
 
   private onItemElementsChanged(): void {
-    this.scrollToBottom();
+
+    if(this.isScrollToBottom){
+      this.scrollToBottom();
+      this.isScrollToBottom = false;
+    }
+    else{
+      this.scrollToHalf();
+    }
   }
 
   private scrollToBottom(): void {
@@ -106,17 +127,27 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
       // behavior: 'smooth'
     });
   }
+  private scrollToHalf(): void {
+    this.scrollContainer.scroll({
+      top: this.scrollContainer.scrollHeight - this.preScrollH,
+      left: 0,
+    });
+
+    this.preScrollH = this.scrollContainer.scrollHeight;
+  }
 
   private getChatById(id: number) {
     
     if (this._utilService.currentOpenedChat != -1) {
       this.postAPICallPromise<GetMessagePaginationI, GetMessageI<MessageI[]>>(APIRoutes.getMessageById(this._utilService.currentOpenedChat), this.options, this.headerOption).then(
         (res) => {
-          // this.messageList = res.data.data;
-          res.data.data.map((chats)=>{
-            this.messageList.push(chats); 
+          if(this.isSendMsg){
+            this.messageList = [];
+          }
 
-          })
+          for(let i=res.data.data.length-1; i>-1; i--){
+            this.messageList.unshift(res.data.data[i]);
+          }
           this.receiverStystemToken = res.data.systemToken;
         }
       )

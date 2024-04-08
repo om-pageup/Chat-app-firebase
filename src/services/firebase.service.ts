@@ -4,7 +4,7 @@ import { environment } from '../environments/environment';
 import { ComponentBase } from '../shared/class/ComponentBase.class';
 import { GetLoggedInUserDetailI } from '../app/response/responseG.response';
 import { APIRoutes } from '../shared/constants/apiRoutes.constant';
-import { INotificationModel } from '../app/model/notification.model';
+import { INotificationModel, NotificationResponse } from '../app/model/notification.model';
 import { UtilService } from './util.service';
 
 @Injectable({
@@ -36,8 +36,13 @@ export class FirebaseService extends ComponentBase {
   public listen() {
     const messaging = getMessaging();
     onMessage(messaging, (payload) => {
+
+      const nofication = payload as NotificationResponse;
       console.log('Message received. ', payload);
-      this._utilService.getChatByIdE.emit(this._utilService.receiverId);
+
+      if(this._utilService.currentOpenedChat == nofication.notification.userId){
+        this._utilService.getChatByIdE.emit(this._utilService.receiverId);
+      }
     });
   }
 
@@ -49,7 +54,8 @@ export class FirebaseService extends ComponentBase {
     const newMsg: INotificationModel = {
       notification: {
         title: obj.title,
-        body: obj.body
+        body: obj.body,
+        userId: loggedInUserId
       },
 
       to: obj.receiverSystemToken

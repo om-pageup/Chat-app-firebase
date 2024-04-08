@@ -6,6 +6,7 @@ import { ChatBoxI } from '../app/model/chat.model';
 })
 export class UtilService {
 
+  public sendMessageE: EventEmitter<boolean> = new EventEmitter<boolean>();
   public getChatByIdE: EventEmitter<number> = new EventEmitter<number>();
   public getChat: EventEmitter<ChatBoxI> = new EventEmitter<ChatBoxI>();
   
