@@ -38,6 +38,8 @@ export class FirebaseService extends ComponentBase {
 
 
   sendNotification(obj: { receiverSystemToken: string, title: string, body: string }) {
+    console.log(obj);
+    
     const url = 'https://fcm.googleapis.com/fcm/send';
     const data = {
       notification: {
