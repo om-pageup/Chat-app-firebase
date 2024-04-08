@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import { environment } from '../environments/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ComponentBase } from '../shared/class/ComponentBase.class';
-import { GetLoggedInUserDetailI, ResponseGI } from '../app/response/responseG.response';
+import { GetLoggedInUserDetailI } from '../app/response/responseG.response';
 import { APIRoutes } from '../shared/constants/apiRoutes.constant';
 import { INotification } from '../app/model/notification.model';
 

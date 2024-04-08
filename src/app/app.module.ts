@@ -18,7 +18,6 @@ import { ChatComponent } from './component/chat/chat.component';
 import { LoginComponent } from './component/login/login.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { addTokenInterceptor } from './interceptor/add-token.interceptor';
 import { AuthInterceptor } from './interceptor/auth.interceptor';
 
 initializeApp(environment.firebase);
