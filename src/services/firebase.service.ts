@@ -44,7 +44,6 @@ export class FirebaseService extends ComponentBase {
 
   public sendNotification(obj: { receiverSystemToken: string, title: string, body: string }, loggedInUserId: number) {
 
-    this._utilService.receiverId = loggedInUserId;
 
     const url = 'https://fcm.googleapis.com/fcm/send';
     const newMsg: INotificationModel = {

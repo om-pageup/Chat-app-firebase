@@ -24,7 +24,6 @@ export class ChatListComponent extends ComponentBase implements OnInit {
 
 
   public getChats(id: number){
-    console.log(id);
     this._utilService.currentOpenedChat = id;
     this._utilService.getChatByIdE.emit(id);
   }

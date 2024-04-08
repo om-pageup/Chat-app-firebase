@@ -28,6 +28,7 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
   ngOnInit(): void {
     this._utilService.getChatByIdE.subscribe(
       (receiverId: number) => {
+        this._utilService.receiverId = receiverId;
         this.recevierId = receiverId;
         this.getChatById(receiverId);
       }
@@ -69,18 +70,23 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
   }
 
   private getChatById(id: number) {
+
+    console.log(id);
     const options: GetMessagePaginationI = {
       isPagination: false,
       index: 1,
       take: 140,
       search: ""
     }
-    this.postAPICallPromise<GetMessagePaginationI, GetMessageI<MessageI[]>>(APIRoutes.getMessageById(id), options, this.headerOption).then(
-      (res) => {
-        this.messageList = res.data.data;
-        this.receiverStystemToken=res.data.systemToken;
-      }
-    )
+
+    if(this._utilService.currentOpenedChat != -1){
+      this.postAPICallPromise<GetMessagePaginationI, GetMessageI<MessageI[]>>(APIRoutes.getMessageById(this._utilService.currentOpenedChat), options, this.headerOption).then(
+        (res) => {
+          this.messageList = res.data.data;
+          this.receiverStystemToken=res.data.systemToken;
+        }
+      )
+    }
   }
 
 
