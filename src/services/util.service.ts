@@ -9,6 +9,7 @@ export class UtilService {
   
   public loggedInUserId: number = -1;
   public receiverId: number = -1;
+  public currentOpenedChat: number = -1;
 
   constructor() { }
 }
