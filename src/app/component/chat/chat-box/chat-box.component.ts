@@ -48,11 +48,17 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
     super();
   }
   ngOnInit(): void {
+
     this._utilService.getChatByIdE.subscribe(
       (receiverId: number) => {
         this._utilService.receiverId = receiverId;
         this.recevierId = receiverId;
         this.getChatById(receiverId);
+      }
+    )
+    this._utilService.isListennotificationE.subscribe(
+      (receiverId: number) => {
+        this.getChatByIdListen(receiverId);
       }
     )
 
@@ -71,7 +77,6 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
   }
 
   public sendMessage() {
-    console.log(this.message);
     this.options.index = 0;
     this.isScrollToBottom = true;
     this.isSendMsg = true;
@@ -143,12 +148,28 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
         (res) => {
           if(this.isSendMsg){
             this.messageList = [];
+            this.isSendMsg = false;
           }
 
           for(let i=res.data.data.length-1; i>-1; i--){
             this.messageList.unshift(res.data.data[i]);
           }
           this.receiverStystemToken = res.data.systemToken;
+        }
+      )
+    }
+  }
+
+
+  private getChatByIdListen(id: number) {
+    
+    this.options.index = 0;
+    if (this._utilService.currentOpenedChat != -1) {
+      this.postAPICallPromise<GetMessagePaginationI, GetMessageI<MessageI[]>>(APIRoutes.getMessageById(id), this.options, this.headerOption).then(
+        (res) => {
+          this.messageList = res.data.data;
+          this.receiverStystemToken = res.data.systemToken;
+          this.isScrollToBottom = true;
         }
       )
     }
