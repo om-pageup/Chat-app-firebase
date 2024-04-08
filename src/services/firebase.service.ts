@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import { environment } from '../environments/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ComponentBase } from '../shared/class/ComponentBase.class';
-import { GetLoggedInUserDetailI, ResponseGI } from '../app/response/responseG.response';
+import { GetLoggedInUserDetailI } from '../app/response/responseG.response';
 import { APIRoutes } from '../shared/constants/apiRoutes.constant';
-import { INotification } from '../app/model/notification.model';
+import { INotificationModel } from '../app/model/notification.model';
 
 @Injectable({
   providedIn: 'root'
@@ -40,13 +39,21 @@ export class FirebaseService extends ComponentBase {
 
   sendNotification(obj: { receiverSystemToken: string, title: string, body: string }) {
     const url = 'https://fcm.googleapis.com/fcm/send';
-    const data: INotification = {
+    const newMsg: INotificationModel = {
       notification: {
         title: obj.title,
         body: obj.body
       },
+
       to: obj.receiverSystemToken
-    };
+    }
+    // const data: INotificationModel = {
+    //   notification: {
+    //     title: obj.title,
+    //     body: obj.body
+    //   },
+    //   to: obj.receiverSystemToken
+    // };
 
     fetch(url, {
       method: 'POST',
@@ -54,7 +61,7 @@ export class FirebaseService extends ComponentBase {
         'Authorization': 'key=AAAA5N9GikU:APA91bE6i7bh3atMvh671HBpD7ab3H6BHG9qbwJHpNOeING93nOfRCHt-XHdoGFcOujelFyN1EGleLaWoCFquNQxRkWFLwM6d_PIoloeJh7Ngtw2J0z5kOufWtx8Lz3OLIHTx7in8oD1',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify(newMsg)
     })
   }
 

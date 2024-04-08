@@ -1,4 +1,4 @@
-export interface INotification {
+export interface INotificationModel {
     notification: {
         title: string,
         body: string
