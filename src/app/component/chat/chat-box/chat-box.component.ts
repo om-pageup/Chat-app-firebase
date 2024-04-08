@@ -17,11 +17,18 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
   @ViewChildren('item') itemElements!: QueryList<any>;
   private scrollContainer: any;
 
+  private options: GetMessagePaginationI = {
+    isPagination: true,
+    index: 0,
+    take: 20,
+    search: ""
+  }
+
   public messageList: MessageI[] = [];
   public recevierId: number = -1;
   public message: string = '';
-  private receiverStystemToken:string='';
-  public userDetail: ChatBoxI={
+  private receiverStystemToken: string = '';
+  public userDetail: ChatBoxI = {
     employeeId: 0,
     employeeName: '',
     lastMessage: '',
@@ -31,8 +38,8 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
     recieverName: '',
     lastActive: '',
   };
-
-  constructor(public _utilService: UtilService, private firebaseService:FirebaseService) {
+  
+  constructor(public _utilService: UtilService, private firebaseService: FirebaseService) {
     super();
   }
   ngOnInit(): void {
@@ -45,12 +52,17 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
     )
 
     this._utilService.getChat.subscribe(
-      (res)=>{
+      (res) => {
         console.log(res);
-        this.userDetail=res
+        this.userDetail = res
       }
     )
 
+  }
+  
+  ngAfterViewInit() {
+    this.scrollContainer = this.scrollFrame.nativeElement;
+    this.itemElements.changes.subscribe(_ => this.onItemElementsChanged());
   }
 
   public sendMessage() {
@@ -62,19 +74,27 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
       this.postAPICallPromise<{ message: string }, GetLoggedInUserDetailI<null>>(APIRoutes.sendMessage(this.recevierId), data, this.headerOption).then(
         (res) => {
           this.getChatById(this.recevierId);
-          this.firebaseService.sendNotification({receiverSystemToken: this.receiverStystemToken, title: "WhatsApp", body: this.message}, this._utilService.loggedInUserId);
+          this.firebaseService.sendNotification({ receiverSystemToken: this.receiverStystemToken, title: "WhatsApp", body: this.message }, this._utilService.loggedInUserId);
         }
       )
       this.message = '';
     }
-    
+
   }
 
-  ngAfterViewInit() {
-    this.scrollContainer = this.scrollFrame.nativeElement;  
-    this.itemElements.changes.subscribe(_ => this.onItemElementsChanged());    
+  public onScrollUp(event:Event){
+    console.log(event);
+    const scrolltop = this.scrollFrame.nativeElement.scrollTop;
+    const isAtBottom = this.scrollFrame.nativeElement.scrollHeight * 0.1;
+    let isApiCall:boolean=false;
+    if(scrolltop<= isAtBottom){
+      this.options.index++;
+      this.getChatById(0);
+      // this.isApiCall=true;
+    }
   }
-  
+
+
   private onItemElementsChanged(): void {
     this.scrollToBottom();
   }
@@ -83,25 +103,21 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
     this.scrollContainer.scroll({
       top: this.scrollContainer.scrollHeight,
       left: 0,
-      behavior: 'smooth'
+      // behavior: 'smooth'
     });
   }
 
   private getChatById(id: number) {
-
-    console.log(id);
-    const options: GetMessagePaginationI = {
-      isPagination: false,
-      index: 1,
-      take: 140,
-      search: ""
-    }
-
-    if(this._utilService.currentOpenedChat != -1){
-      this.postAPICallPromise<GetMessagePaginationI, GetMessageI<MessageI[]>>(APIRoutes.getMessageById(this._utilService.currentOpenedChat), options, this.headerOption).then(
+    
+    if (this._utilService.currentOpenedChat != -1) {
+      this.postAPICallPromise<GetMessagePaginationI, GetMessageI<MessageI[]>>(APIRoutes.getMessageById(this._utilService.currentOpenedChat), this.options, this.headerOption).then(
         (res) => {
-          this.messageList = res.data.data;
-          this.receiverStystemToken=res.data.systemToken;
+          // this.messageList = res.data.data;
+          res.data.data.map((chats)=>{
+            this.messageList.push(chats); 
+
+          })
+          this.receiverStystemToken = res.data.systemToken;
         }
       )
     }
