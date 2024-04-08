@@ -28,7 +28,6 @@ export class AppComponent extends ComponentBase implements OnInit {
    private getLoggedInUserId(){
      this.getAPICallPromise<GetLoggedInUserDetailI<UserI>>('/userDetails', this.headerOption).then(
        (res) =>{
-         console.log(res.data.id);
          this._utilService.loggedInUserId = res.data.id;
        }
      )

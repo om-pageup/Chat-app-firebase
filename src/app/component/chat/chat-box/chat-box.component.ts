@@ -21,6 +21,16 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
   public recevierId: number = -1;
   public message: string = '';
   private receiverStystemToken:string='';
+  public userDetail: ChatBoxI={
+    employeeId: 0,
+    employeeName: '',
+    lastMessage: '',
+    isSeen: false,
+    newMessages: 0,
+    recieverId: 0,
+    recieverName: '',
+    lastActive: '',
+  };
 
   constructor(public _utilService: UtilService, private firebaseService:FirebaseService) {
     super();
@@ -33,6 +43,14 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
         this.getChatById(receiverId);
       }
     )
+
+    this._utilService.getChat.subscribe(
+      (res)=>{
+        console.log(res);
+        this.userDetail=res
+      }
+    )
+
   }
 
   public sendMessage() {
