@@ -44,7 +44,7 @@ export class FirebaseService {
         title: obj.title,
         body: obj.body
       },
-      to: "evYn0J-ZlKVE6KXM5sgUVh:APA91bHzYE9k9Mv0DGjldPFxulnCHJcZBEEBwN-p45hQntMN6vuqthowNZYTtaoMYjvvqhCZcZFnq_7EDS1nfgNgYvTPPwwV6TMVla1vRg55jHqe_Xx0mUTM6v2SEr5A4Tv0dDvgRCBx"
+      to: obj.receiverSystemToken
     };
 
     fetch(url, {
