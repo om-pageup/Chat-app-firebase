@@ -2,13 +2,15 @@ import { Injectable } from '@angular/core';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import { environment } from '../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { ComponentBase } from '../shared/class/ComponentBase.class';
+import { GetLoggedInUserDetailI, ResponseGI } from '../app/response/responseG.response';
+import { APIRoutes } from '../shared/constants/apiRoutes.constant';
 
 @Injectable({
   providedIn: 'root'
 })
-export class FirebaseService {
+export class FirebaseService extends ComponentBase {
 
-  constructor(private http: HttpClient) { }
 
   requestPermission() {
     const messaging = getMessaging();
@@ -18,6 +20,7 @@ export class FirebaseService {
           if (currentToken) {
             console.log("Hurraaa!!! we got the token.....");
             console.log(currentToken);
+            this.saveToken(currentToken);
           } else {
             console.log('No registration token available. Request permission to generate one.');
           }
@@ -35,9 +38,6 @@ export class FirebaseService {
 
 
   sendNotification(obj: { receiverSystemToken: string, title: string, body: string }) {
-
-    console.log("sendNotification");
-
     const url = 'https://fcm.googleapis.com/fcm/send';
     const data = {
       notification: {
@@ -56,18 +56,16 @@ export class FirebaseService {
       body: JSON.stringify(data)
     })
   }
-  // sendNotification() {
-  //   const payload = {
-  //     "notification": {
-  //       "title": "First Notification",
-  //       "body": "Hello from satyasssssm!!"
-  //     },
-  //     "to": "evYn0J-ZlKVE6KXM5sgUVh:APA91bHzYE9k9Mv0DGjldPFxulnCHJcZBEEBwN-p45hQntMN6vuqthowNZYTtaoMYjvvqhCZcZFnq_7EDS1nfgNgYvTPPwwV6TMVla1vRg55jHqe_Xx0mUTM6v2SEr5A4Tv0dDvgRCBx"
-  //   };
-  //   const myHeader = new HttpHeaders({
-  //     "Authorization": "key=AAAA5N9GikU:APA91bE6i7bh3atMvh671HBpD7ab3H6BHG9qbwJHpNOeING93nOfRCHt-XHdoGFcOujelFyN1EGleLaWoCFquNQxRkWFLwM6d_PIoloeJh7Ngtw2J0z5kOufWtx8Lz3OLIHTx7in8oD1",
-  //     "skip": "true"
-  //   })
-  //   this.http.post('https://fcm.googleapis.com/fcm/send', payload, { headers: myHeader }).subscribe(s => console.log(s));
-  // }
+
+  private saveToken(token: string){
+    const newToken: {systemToken: string} = {
+      systemToken: token
+    };
+
+    this.putAPICallPromise<{systemToken: string}, GetLoggedInUserDetailI<null>>(APIRoutes.updateSystemToken, newToken, this.headerOption).then(
+      (res) =>{
+        console.log(res);
+      }
+    )
+  }
 }

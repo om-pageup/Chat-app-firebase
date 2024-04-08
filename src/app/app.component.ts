@@ -17,10 +17,6 @@ export class AppComponent extends ComponentBase implements OnInit {
     super();
     this.firebaseService.requestPermission();
     this.firebaseService.listen();
-
-    // setTimeout(() => {
-    //   // firebaseService.sendNotification({});
-    // }, 5000);
   }
 
   ngOnInit(): void {
