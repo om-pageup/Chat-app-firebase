@@ -6,6 +6,7 @@ import { GetLoggedInUserDetailI } from '../app/response/responseG.response';
 import { APIRoutes } from '../shared/constants/apiRoutes.constant';
 import { INotificationModel, NotificationResponse } from '../app/model/notification.model';
 import { UtilService } from './util.service';
+import { NumberString } from '../app/model/util.model';
 
 @Injectable({
   providedIn: 'root'
@@ -42,11 +43,16 @@ export class FirebaseService extends ComponentBase {
 
       const senderID: number = parseInt(nofication.data['gcm.notification.userId']);
 
+      const data: NumberString = {
+        id: senderID,
+        data: nofication.notification.body
+      }
+
       if(this._utilService.currentOpenedChat == senderID){
         this._utilService.isListennotificationE.emit(senderID);
       }
       else{
-        this._utilService.increaseChatCountE.emit(senderID);
+        this._utilService.increaseChatCountE.emit(data);
       }
     });
   }

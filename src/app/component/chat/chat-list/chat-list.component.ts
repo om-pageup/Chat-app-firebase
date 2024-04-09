@@ -4,6 +4,7 @@ import { ResponseGI, ResponseIterableI } from '../../../response/responseG.respo
 import { ComponentBase } from '../../../../shared/class/ComponentBase.class';
 import { UtilService } from '../../../../services/util.service';
 import { APIRoutes } from '../../../../shared/constants/apiRoutes.constant';
+import { NumberString } from '../../../model/util.model';
 
 @Component({
   selector: 'app-chat-list',
@@ -18,13 +19,13 @@ export class ChatListComponent extends ComponentBase implements OnInit {
     super();
 
     _utilService.increaseChatCountE.subscribe(
-      (id: number) => {
-        console.log(id);
-
+      (data: NumberString) => {
+        console.log(data);
         this.chatBoxList.map(
           (chat) => {
-            if (chat.employeeId == id) {
+            if (chat.employeeId == data.id) {
               chat.newMessages++;
+              chat.lastMessage = data.data;
             }
           }
         )
