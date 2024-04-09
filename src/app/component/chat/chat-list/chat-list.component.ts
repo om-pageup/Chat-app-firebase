@@ -20,7 +20,6 @@ export class ChatListComponent extends ComponentBase implements OnInit {
 
     _utilService.increaseChatCountE.subscribe(
       (data: NumberString) => {
-        console.log(data);
         this.chatBoxList.map(
           (chat) => {
             if (chat.employeeId == data.id) {
@@ -38,12 +37,12 @@ export class ChatListComponent extends ComponentBase implements OnInit {
   }
 
 
-  public getChats(id: number, allChat: ChatBoxI) {
+  public getChats(id: number, allChat: ChatBoxI, index: number) {
+
+    this.chatBoxList[index].newMessages = 0;
+
     this._utilService.currentOpenedChat = id;
-
     this._utilService.chatClickedE.emit(id);
-
-
     this._utilService.getChat.emit(allChat);
   }
 
