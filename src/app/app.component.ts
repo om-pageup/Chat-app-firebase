@@ -39,6 +39,7 @@ export class AppComponent extends ComponentBase implements OnInit {
   ngOnInit(): void {
     if (localStorage.getItem("jwtToken")) {
       this.getLoggedInUserId();
+      this.showChatMessages = true;
     }
   }
 
