@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ChatBoxI } from '../../../model/chat.model';
+import { ChatBoxC, ChatBoxI } from '../../../model/chat.model';
 import { ResponseGI, ResponseIterableI } from '../../../response/responseG.response';
 import { ComponentBase } from '../../../../shared/class/ComponentBase.class';
 import { UtilService } from '../../../../services/util.service';
 import { APIRoutes } from '../../../../shared/constants/apiRoutes.constant';
 import { NumberString } from '../../../model/util.model';
-import { UserI } from '../../../response/user.response';
+import { IGetAllUser, UserI } from '../../../response/user.response';
 import { IEmplyeeOptions } from '../../../model/option.model';
 
 @Component({
@@ -16,44 +16,84 @@ import { IEmplyeeOptions } from '../../../model/option.model';
 export class ChatListComponent extends ComponentBase implements OnInit {
 
   public chatBoxList: ChatBoxI[] = [];
+  public allUserList: IGetAllUser[] = [];
+  public searchResult: IGetAllUser[] = [];
+  public searchUser: string = "";
 
   constructor(public _utilService: UtilService) {
     super();
 
+    this._utilService.refreshChatListE.subscribe(
+      (res) => {
+        this.getChatBox();
+      }
+    )
+
     this._utilService.increaseChatCountE.subscribe(
       (data: NumberString) => {
-        this.chatBoxList.map(
-          (chat: ChatBoxI) => {
-            console.log(chat);
-            if (chat.employeeId == data.id) {
-              console.log(chat, data.id);
-              chat.newMessages++;
-              chat.lastMessage = data.data;
-            }
-            else{
-              if(chat.recieverId == data.id){
-                chat.newMessages ++;
-                chat.lastMessage = data.data;
-              }
-            }
-          }
-        )
+        this.increaseChatCountF(data);
       }
     )
   }
 
   ngOnInit(): void {
+    this.getAllUser();
     this.getChatBox();
   }
 
 
   public getChats(id: number, allChat: ChatBoxI, index: number) {
-
     this.chatBoxList[index].newMessages = 0;
-
     this._utilService.currentOpenedChat = id;
+
     this._utilService.chatClickedE.emit(id);
+
+    console.log(id);
+
+    // to display name in chat header
     this._utilService.getChat.emit(allChat);
+  }
+
+  public getSearchedUserChats(user: IGetAllUser) {
+    console.log(user);
+    let isAlreadyExists: boolean = false;
+
+
+
+    for (let userChats of this.chatBoxList) {
+      if (userChats.recieverId == user.id) {
+        isAlreadyExists = true;
+        this._utilService.showSearchedChatE.emit(user.id);
+        this._utilService.getChat.emit(userChats);
+        break;
+      }
+      else if (userChats.employeeId == user.id) {
+        isAlreadyExists = true;
+        this._utilService.showSearchedChatE.emit(user.id);
+        this._utilService.getChat.emit(userChats);
+        break;
+      }
+    }
+
+    if (!isAlreadyExists) {
+      this._utilService.showSearchedUserNameInChatHeaderE.emit(user);
+    }
+
+  }
+
+  public onSearch() {
+    this.searchResult = this.filterSearch(this.searchUser);
+  }
+
+
+  private filterSearch(str: string): IGetAllUser[] {
+
+    if (str == "") {
+      return [];
+    }
+    return this.allUserList.filter(
+      (user) => user.employeeName.toLowerCase().includes(str)
+    );
   }
 
   private getChatBox() {
@@ -62,6 +102,36 @@ export class ChatListComponent extends ComponentBase implements OnInit {
         this.chatBoxList = res.iterableData;
       }
     )
+
+  }
+
+
+  private increaseChatCountF(data: NumberString) {
+    this.chatBoxList.map(
+      (chat: ChatBoxI, i: number) => {
+        if (chat.employeeId == data.id) {
+          chat.newMessages++;
+          chat.lastMessage = data.data;
+
+          const newChat = chat;
+          this.chatBoxList.splice(i, 1);
+          this.chatBoxList.unshift(newChat);
+        }
+        else {
+          if (chat.recieverId == data.id) {
+            chat.newMessages++;
+            chat.lastMessage = data.data;
+
+            const newChat = chat;
+            this.chatBoxList.splice(i, 1);
+            this.chatBoxList.unshift(newChat);
+          }
+        }
+      }
+    )
+  }
+
+  private getAllUser() {
     const options: IEmplyeeOptions = {
       isPagination: false,
       index: 0,
@@ -71,11 +141,10 @@ export class ChatListComponent extends ComponentBase implements OnInit {
       orderBy: ""
     }
 
-    // this.postAPICallPromise<IEmplyeeOptions, ResponseIterableI<UserI[]>>(APIRoutes.getAllEmployee,options, this.headerOption).then(
-    //   (res) => {
-    //     console.log(res);
-    //   }
-    // )
+    this.postAPICallPromise<IEmplyeeOptions, ResponseIterableI<IGetAllUser[]>>(APIRoutes.getAllEmployee, options, this.headerOption).then(
+      (res) => {
+        this.allUserList = res.iterableData;
+      }
+    )
   }
-
 }

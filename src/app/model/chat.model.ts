@@ -8,6 +8,16 @@ export interface ChatBoxI {
     recieverName: string;
     lastActive: string;
 }
+export class ChatBoxC {
+    employeeId: number = 0;
+    employeeName: string = '';
+    lastMessage: string = '';
+    isSeen: boolean = false;
+    newMessages: number = 0;
+    recieverId: number = 0;
+    recieverName: string = '';
+    lastActive: string = '';
+}
 
 export interface MessageI{
     id: number;

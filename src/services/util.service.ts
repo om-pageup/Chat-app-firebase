@@ -1,6 +1,7 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { ChatBoxI } from '../app/model/chat.model';
 import { NumberString } from '../app/model/util.model';
+import { IGetAllUser } from '../app/response/user.response';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,9 @@ export class UtilService {
   public chatClickedE: EventEmitter<number> = new EventEmitter<number>();
   public increaseChatCountE: EventEmitter<NumberString> = new EventEmitter<NumberString>();
   public showUser: EventEmitter<boolean> = new EventEmitter<boolean>();
+  public showSearchedUserNameInChatHeaderE: EventEmitter<IGetAllUser> = new EventEmitter<IGetAllUser>();
+  public showSearchedChatE: EventEmitter<number> = new EventEmitter<number>();
+  public refreshChatListE: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 
   public loggedInUserId: number = -1;

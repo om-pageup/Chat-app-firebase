@@ -54,6 +54,7 @@ export class FirebaseService extends ComponentBase {
       else{
         this._utilService.increaseChatCountE.emit(data);
       }
+
     });
   }
 
