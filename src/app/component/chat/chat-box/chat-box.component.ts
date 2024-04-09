@@ -43,6 +43,9 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
     recieverName: '',
     lastActive: '',
   };
+
+  public showChatMessages: boolean = false;
+
   
   constructor(public _utilService: UtilService, private firebaseService: FirebaseService) {
     super();
@@ -73,6 +76,15 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
     this._utilService.getChat.subscribe(
       (res) => {
         this.userDetail = res
+      }
+    )
+
+    this._utilService.chatClickedE.subscribe(
+      (id: number) => {
+        if (id > -1)
+          this.showChatMessages = true;
+        else
+          this.showChatMessages = false;
       }
     )
 
