@@ -55,9 +55,9 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
   public showChatMessages: boolean = false;
 
 
-  constructor(public _utilService: UtilService, private firebaseService: FirebaseService) {
+
   public showEmojiPicker: boolean = false;
-  
+
   constructor(public _utilService: UtilService, private firebaseService: FirebaseService, private http: HttpClient) {
     super();
     this.isSearchedUserChat = false;
@@ -140,7 +140,7 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
       }
       this.postAPICallPromise<{ message: string }, GetLoggedInUserDetailI<null>>(APIRoutes.sendMessage(this.recevierId), data, this.headerOption).then(
         (res) => {
-          if(this.isSearchedUserChat){
+          if (this.isSearchedUserChat) {
             this._utilService.refreshChatListE.emit(true);
           }
           this.getChatByIdListen(this.recevierId);
@@ -235,10 +235,10 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
 
   toggleEmojiPicker() {
     console.log(this.showEmojiPicker);
-        this.showEmojiPicker = !this.showEmojiPicker;
+    this.showEmojiPicker = !this.showEmojiPicker;
   }
 
-  addEmoji(event:any) {
+  addEmoji(event: any) {
     console.log(this.message)
     const { message } = this;
     console.log(message);
