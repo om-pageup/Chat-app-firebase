@@ -4,7 +4,7 @@
             <img src="../../../../assets/jethalal_1621940926.jpg" width="40px" height="40px" alt="">
         </div>
         <div class="col-10 name-section">
-            <div>
+            <div *ngIf="!isSearchedUserChat">
                 <ng-container *ngIf="_utilService.loggedInUserId != userDetail.recieverId; else otherU">
                     <h5>{{userDetail.recieverName}}</h5>
                     <small>Online</small>
@@ -12,8 +12,12 @@
                 <ng-template #otherU>
                     <h5>{{userDetail.employeeName}}</h5>
                     <small>Online</small>
-
                 </ng-template>
+            </div>
+
+            <div *ngIf="isSearchedUserChat">
+                <h5>{{searchedUserChat.employeeName}}</h5>
+                <small>Online</small>
             </div>
         </div>
         <div class="col-1 option-bar">

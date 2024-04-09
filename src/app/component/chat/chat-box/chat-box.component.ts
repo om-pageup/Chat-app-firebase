@@ -6,6 +6,8 @@ import { ComponentBase } from '../../../../shared/class/ComponentBase.class';
 import { UtilService } from '../../../../services/util.service';
 import { APIRoutes } from '../../../../shared/constants/apiRoutes.constant';
 import { FirebaseService } from '../../../../services/firebase.service';
+import { CGetAllUser, IGetAllUser } from '../../../response/user.response';
+import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -19,6 +21,11 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
   private scrollContainer: any;
   public isScrollToBottom: boolean = true;
   public isSendMsg: boolean = false;
+
+
+  // when user is searched
+  public isSearchedUserChat: boolean = false;
+  public searchedUserChat: CGetAllUser = new CGetAllUser();
 
 
   public preScrollH: number = 0;
@@ -46,18 +53,28 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
   };
 
   public showChatMessages: boolean = false;
+
+
+  constructor(public _utilService: UtilService, private firebaseService: FirebaseService) {
   public showEmojiPicker: boolean = false;
   
   constructor(public _utilService: UtilService, private firebaseService: FirebaseService, private http: HttpClient) {
     super();
+    this.isSearchedUserChat = false;
 
     _utilService.chatClickedE.subscribe(
-      (id: number) =>{
+      (id: number) => {
         this.recevierId = id;
         this.getChatByIdListen(id);
+
+        if (id > -1)
+          this.showChatMessages = true;
+        else
+          this.showChatMessages = false;
       }
     )
   }
+
   ngOnInit(): void {
 
     this._utilService.getChatByIdE.subscribe(
@@ -76,21 +93,38 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
 
     this._utilService.getChat.subscribe(
       (res) => {
+        console.log(res);
         this.userDetail = res
+      }
+    );
+
+    this._utilService.showSearchedChatE.subscribe(
+      (id: number) => {
+        console.log(id);
+        this.postAPICallPromise<GetMessagePaginationI, GetMessageI<MessageI[]>>(APIRoutes.getMessageById(id), this.options, this.headerOption).then(
+          (res) => {
+            this.showChatMessages = true;
+            this.isSearchedUserChat = false;
+            this.messageList = res.data.data;
+            this.receiverStystemToken = res.data.systemToken;
+            this.isScrollToBottom = true;
+          }
+        )
       }
     )
 
-    this._utilService.chatClickedE.subscribe(
-      (id: number) => {
-        if (id > -1)
-          this.showChatMessages = true;
-        else
-          this.showChatMessages = false;
+    this._utilService.showSearchedUserNameInChatHeaderE.subscribe(
+      (user: IGetAllUser) => {
+        this.messageList = [];
+        this.searchedUserChat = user;
+        this.isSearchedUserChat = true;
+        this.showChatMessages = true;
+        this.recevierId = user.id;
       }
     )
 
   }
-  
+
   ngAfterViewInit() {
     this.scrollContainer = this.scrollFrame.nativeElement;
     this.itemElements.changes.subscribe(_ => this.onItemElementsChanged());
@@ -106,6 +140,9 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
       }
       this.postAPICallPromise<{ message: string }, GetLoggedInUserDetailI<null>>(APIRoutes.sendMessage(this.recevierId), data, this.headerOption).then(
         (res) => {
+          if(this.isSearchedUserChat){
+            this._utilService.refreshChatListE.emit(true);
+          }
           this.getChatByIdListen(this.recevierId);
           this.firebaseService.sendNotification({ receiverSystemToken: this.receiverStystemToken, title: "WhatsApp", body: data.message }, this._utilService.loggedInUserId);
         }
@@ -115,12 +152,12 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
 
   }
 
-  public onScrollUp(event:Event){
+  public onScrollUp(event: Event) {
     const scrolltop = this.scrollFrame.nativeElement.scrollTop;
     // const isAtBottom = this.scrollFrame.nativeElement.scrollHeight * 0.1;
 
-    if(scrolltop == 0){
-      this.options.index ++;
+    if (scrolltop == 0) {
+      this.options.index++;
       this.getChatById(0);
     }
 
@@ -135,11 +172,11 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
 
   private onItemElementsChanged(): void {
 
-    if(this.isScrollToBottom){
+    if (this.isScrollToBottom) {
       this.scrollToBottom();
       this.isScrollToBottom = false;
     }
-    else{
+    else {
       this.scrollToHalf();
     }
   }
@@ -161,16 +198,16 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
   }
 
   private getChatById(id: number) {
-    
+
     if (this._utilService.currentOpenedChat != -1) {
       this.postAPICallPromise<GetMessagePaginationI, GetMessageI<MessageI[]>>(APIRoutes.getMessageById(this._utilService.currentOpenedChat), this.options, this.headerOption).then(
         (res) => {
-          if(this.isSendMsg){
+          if (this.isSendMsg) {
             this.messageList = [];
             this.isSendMsg = false;
           }
 
-          for(let i=res.data.data.length-1; i>-1; i--){
+          for (let i = res.data.data.length - 1; i > -1; i--) {
             this.messageList.unshift(res.data.data[i]);
           }
           this.receiverStystemToken = res.data.systemToken;
@@ -181,7 +218,8 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
 
 
   private getChatByIdListen(id: number) {
-    
+
+    console.log(id);
     this.options.index = 0;
     if (this._utilService.currentOpenedChat != -1) {
       this.postAPICallPromise<GetMessagePaginationI, GetMessageI<MessageI[]>>(APIRoutes.getMessageById(id), this.options, this.headerOption).then(

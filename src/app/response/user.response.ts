@@ -13,3 +13,24 @@ export interface UserI{
     createdAt: string;
     updatedAt: string;
 }
+
+export interface IGetAllUser{
+    city: string;
+    country: string;
+    departmentName: string;
+    email: string;
+    employeeName: string;
+    employeeType: string;
+    id: number;
+    phone: string;
+}
+export class CGetAllUser{
+    city: string = '';
+    country: string = '';
+    departmentName: string = '';
+    email: string = '';
+    employeeName: string = '';
+    employeeType: string = '';
+    id: number = -1;
+    phone: string = '';
+}
