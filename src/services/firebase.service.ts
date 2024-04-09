@@ -40,18 +40,19 @@ export class FirebaseService extends ComponentBase {
       const nofication = payload as NotificationResponse;
       console.log('Message received. ', payload.data);
 
-      // if(this._utilService.currentOpenedChat == nofication.notification.userId){
-      // }
-      console.log(this._utilService.receiverId);
-      // this._utilService.getChatByIdE.emit(this._utilService.receiverId);
-      this._utilService.isListennotificationE.emit(this._utilService.receiverId);
+      const senderID: number = parseInt(nofication.data['gcm.notification.userId']);
+
+      if(this._utilService.currentOpenedChat == senderID){
+        this._utilService.isListennotificationE.emit(senderID);
+      }
+      else{
+        this._utilService.increaseChatCountE.emit(senderID);
+      }
     });
   }
 
 
   public sendNotification(obj: { receiverSystemToken: string, title: string, body: string }, loggedInUserId: number) {
-
-    console.log(loggedInUserId);
 
     const url = 'https://fcm.googleapis.com/fcm/send';
     const newMsg: INotificationModel = {

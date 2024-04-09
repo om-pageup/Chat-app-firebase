@@ -18,6 +18,15 @@ export class ChatComponent {
           this.showChatMessages = false;
       }
     )
+
+    _utilService.chatClickedE.subscribe(
+      (id: number) => {
+        if (id > -1)
+          this.showChatMessages = true;
+        else
+          this.showChatMessages = false;
+      }
+    )
   }
 
 }
