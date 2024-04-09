@@ -5,6 +5,8 @@ import { ComponentBase } from '../../../../shared/class/ComponentBase.class';
 import { UtilService } from '../../../../services/util.service';
 import { APIRoutes } from '../../../../shared/constants/apiRoutes.constant';
 import { NumberString } from '../../../model/util.model';
+import { UserI } from '../../../response/user.response';
+import { IEmplyeeOptions } from '../../../model/option.model';
 
 @Component({
   selector: 'app-chat-list',
@@ -20,7 +22,6 @@ export class ChatListComponent extends ComponentBase implements OnInit {
 
     _utilService.increaseChatCountE.subscribe(
       (data: NumberString) => {
-        console.log(data);
         this.chatBoxList.map(
           (chat) => {
             if (chat.employeeId == data.id) {
@@ -38,12 +39,12 @@ export class ChatListComponent extends ComponentBase implements OnInit {
   }
 
 
-  public getChats(id: number, allChat: ChatBoxI) {
+  public getChats(id: number, allChat: ChatBoxI, index: number) {
+
+    this.chatBoxList[index].newMessages = 0;
+
     this._utilService.currentOpenedChat = id;
-
     this._utilService.chatClickedE.emit(id);
-
-
     this._utilService.getChat.emit(allChat);
   }
 
@@ -53,6 +54,20 @@ export class ChatListComponent extends ComponentBase implements OnInit {
         this.chatBoxList = res.iterableData;
       }
     )
+    const options: IEmplyeeOptions = {
+      isPagination: false,
+      index: 0,
+      take: 0,
+      search: "",
+      orders: 0,
+      orderBy: ""
+    }
+
+    // this.postAPICallPromise<IEmplyeeOptions, ResponseIterableI<UserI[]>>(APIRoutes.getAllEmployee,options, this.headerOption).then(
+    //   (res) => {
+    //     console.log(res);
+    //   }
+    // )
   }
 
 }
