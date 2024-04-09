@@ -14,6 +14,7 @@ export class UtilService {
   
   public chatClickedE: EventEmitter<number> = new EventEmitter<number>();
   public increaseChatCountE: EventEmitter<NumberString> = new EventEmitter<NumberString>();
+  public showUser: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 
   public loggedInUserId: number = -1;
