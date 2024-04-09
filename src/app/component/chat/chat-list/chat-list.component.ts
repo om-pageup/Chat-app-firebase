@@ -20,7 +20,7 @@ export class ChatListComponent extends ComponentBase implements OnInit {
   constructor(public _utilService: UtilService) {
     super();
 
-    _utilService.increaseChatCountE.subscribe(
+    this._utilService.increaseChatCountE.subscribe(
       (data: NumberString) => {
         this.chatBoxList.map(
           (chat) => {
