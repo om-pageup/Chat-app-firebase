@@ -10,6 +10,9 @@ export interface INotificationModel {
 
 export interface NotificationResponse{
     collapseKey: string;
+    data: {
+        [key: string]: string;
+    },
     from: string;
     messageId: string;
     notification: {

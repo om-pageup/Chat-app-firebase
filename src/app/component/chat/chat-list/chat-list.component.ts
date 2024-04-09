@@ -14,8 +14,22 @@ export class ChatListComponent extends ComponentBase implements OnInit {
 
   public chatBoxList: ChatBoxI[] = [];
 
-  constructor(public _utilService:UtilService){
+  constructor(public _utilService: UtilService) {
     super();
+
+    _utilService.increaseChatCountE.subscribe(
+      (id: number) => {
+        console.log(id);
+
+        this.chatBoxList.map(
+          (chat) => {
+            if (chat.employeeId == id) {
+              chat.newMessages++;
+            }
+          }
+        )
+      }
+    )
   }
 
   ngOnInit(): void {
@@ -23,17 +37,19 @@ export class ChatListComponent extends ComponentBase implements OnInit {
   }
 
 
-  public getChats(id: number,allChat:ChatBoxI){
-    console.log(id);
+  public getChats(id: number, allChat: ChatBoxI) {
     this._utilService.currentOpenedChat = id;
-    this._utilService.getChatByIdE.emit(id);
+
+    this._utilService.chatClickedE.emit(id);
+
+
     this._utilService.getChat.emit(allChat);
   }
 
-  private getChatBox(){
-    this.getAPICallPromise<ResponseIterableI< ChatBoxI[]>>(APIRoutes.getChatBox, this.headerOption).then(
-      (res) =>{
-        this.chatBoxList=res.iterableData;
+  private getChatBox() {
+    this.getAPICallPromise<ResponseIterableI<ChatBoxI[]>>(APIRoutes.getChatBox, this.headerOption).then(
+      (res) => {
+        this.chatBoxList = res.iterableData;
       }
     )
   }

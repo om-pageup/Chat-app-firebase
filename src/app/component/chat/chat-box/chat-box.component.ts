@@ -46,6 +46,13 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
   
   constructor(public _utilService: UtilService, private firebaseService: FirebaseService) {
     super();
+
+    _utilService.chatClickedE.subscribe(
+      (id: number) =>{
+        this.recevierId = id;
+        this.getChatByIdListen(id);
+      }
+    )
   }
   ngOnInit(): void {
 
@@ -53,6 +60,7 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
       (receiverId: number) => {
         this._utilService.receiverId = receiverId;
         this.recevierId = receiverId;
+        console.log(receiverId);
         this.getChatById(receiverId);
       }
     )
@@ -64,7 +72,6 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
 
     this._utilService.getChat.subscribe(
       (res) => {
-        console.log(res);
         this.userDetail = res
       }
     )
@@ -86,7 +93,7 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
       }
       this.postAPICallPromise<{ message: string }, GetLoggedInUserDetailI<null>>(APIRoutes.sendMessage(this.recevierId), data, this.headerOption).then(
         (res) => {
-          this.getChatById(this.recevierId);
+          this.getChatByIdListen(this.recevierId);
           this.firebaseService.sendNotification({ receiverSystemToken: this.receiverStystemToken, title: "WhatsApp", body: data.message }, this._utilService.loggedInUserId);
         }
       )
@@ -96,9 +103,8 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
   }
 
   public onScrollUp(event:Event){
-    console.log(event);
     const scrolltop = this.scrollFrame.nativeElement.scrollTop;
-    const isAtBottom = this.scrollFrame.nativeElement.scrollHeight * 0.1;
+    // const isAtBottom = this.scrollFrame.nativeElement.scrollHeight * 0.1;
 
     if(scrolltop == 0){
       this.options.index ++;
