@@ -6,6 +6,7 @@ import { ComponentBase } from '../../../../shared/class/ComponentBase.class';
 import { UtilService } from '../../../../services/util.service';
 import { APIRoutes } from '../../../../shared/constants/apiRoutes.constant';
 import { FirebaseService } from '../../../../services/firebase.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-chat-box',
@@ -45,9 +46,9 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
   };
 
   public showChatMessages: boolean = false;
-
+  public showEmojiPicker: boolean = false;
   
-  constructor(public _utilService: UtilService, private firebaseService: FirebaseService) {
+  constructor(public _utilService: UtilService, private firebaseService: FirebaseService, private http: HttpClient) {
     super();
 
     _utilService.chatClickedE.subscribe(
@@ -193,6 +194,22 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
     }
   }
 
+
+  toggleEmojiPicker() {
+    console.log(this.showEmojiPicker);
+        this.showEmojiPicker = !this.showEmojiPicker;
+  }
+
+  addEmoji(event:any) {
+    console.log(this.message)
+    const { message } = this;
+    console.log(message);
+    console.log(`${event.emoji.native}`)
+    const text = `${message}${event.emoji.native}`;
+
+    this.message = text;
+    // this.showEmojiPicker = false;
+  }
 
 
 }

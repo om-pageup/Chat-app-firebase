@@ -29,15 +29,42 @@
         </div>
         <div class="row mx-0 footer">
             <div class="message-box">
-                <i class='bx bx-smile'></i>
+                <i class='bx bx-smile' (click)="toggleEmojiPicker()"></i>
+                <div class="emoji-container">
+                    <emoji-mart class="emoji-mart" *ngIf="showEmojiPicker" (emojiSelect)="addEmoji($event)" title="Pick your emoji…"></emoji-mart>
+                </div>
+               
+                <div class="btn-group dropup">
+                    <i data-bs-toggle="dropdown" aria-expanded="false" class='bx bx-plus'></i>
+                    <ul class="dropdown-menu ">
+                        <li>
+                            <!-- <i class='bx bxs-file-doc'></i> Document -->
+                            <label for="file-upload" class="custom-file-upload">
+                                <i class='bx bxs-file-doc'></i>
+                                Document
+                                <input id="file-upload" type="file" accept=".xlsx,.xls,.doc, .docx,.ppt, .pptx,.pdf" />
+                            </label>
+
+                        </li>
+                        <li>
+                            <label for="img-upload" class="custom-file-upload">
+                                <i class='bx bx-images'></i>
+                                Photos & Videos
+                                <input id="img-upload" type="file" accept="image/*,video/*" />
+                            </label>
+                        </li>
+                    </ul>
+                </div>
                 <input type="text" placeholder="Type a message" [(ngModel)]="message" (keydown.enter)="sendMessage()">
+                
+                
+                
             </div>
         </div>
     </div>
 </div>
 <div class="chat-container" [ngStyle]="{'display' : showChatMessages? 'none' :'block'}">
-   <div class="container d-flex justify-content-center align-items-center">
-    <img src="../../../../assets/chat-1873536_1280-removebg-preview.png" alt="">
-
-   </div>
+    <div class="container d-flex justify-content-center align-items-center">
+        <img src="../../../../assets/chat-1873536_1280-removebg-preview.png" alt="">
+    </div>
 </div>

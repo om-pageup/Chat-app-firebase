@@ -20,6 +20,8 @@ export class ChatListComponent extends ComponentBase implements OnInit {
   constructor(public _utilService: UtilService) {
     super();
 
+    
+
     this._utilService.increaseChatCountE.subscribe(
       (data: NumberString) => {
         this.chatBoxList.map(
@@ -30,9 +32,9 @@ export class ChatListComponent extends ComponentBase implements OnInit {
               chat.newMessages++;
               chat.lastMessage = data.data;
             }
-            else{
-              if(chat.recieverId == data.id){
-                chat.newMessages ++;
+            else {
+              if (chat.recieverId == data.id) {
+                chat.newMessages++;
                 chat.lastMessage = data.data;
               }
             }
