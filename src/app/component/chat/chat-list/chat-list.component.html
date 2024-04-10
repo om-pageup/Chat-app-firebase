@@ -3,15 +3,14 @@
         <input type="text" placeholder="Search..." class="input-box" [(ngModel)]="searchUser" (input)="onSearch()">
 
         <div class="dropdown">
-            <div class="dropdown-menu" style="width: 100%;" [ngStyle]="{'display': (searchResult.length > 0)? 'block':'none'}">
-                <li class="userlist-s" 
-                    (click)="getSearchedUserChats(item)"
-                    *ngFor="let item of searchResult; let i=index"
-                >
+            <div class="dropdown-menu" style="width: 100%;"
+                [ngStyle]="{'display': (searchResult.length > 0)? 'block':'none'}">
+                <li class="userlist-s" (click)="getSearchedUserChats(item)"
+                    *ngFor="let item of searchResult; let i=index">
                     {{ item.employeeName }}
                 </li>
             </div>
-        </div> 
+        </div>
     </div>
 
 
@@ -26,7 +25,15 @@
                         <span *ngIf="chat.newMessages > 0"
                             class="badge bg-primary rounded-pill">{{chat.newMessages}}</span>
                     </div>
-                    <p class="mb-1">{{chat.lastMessage}}</p>
+                    <div class="d-flex justify-content-between">
+                        <p class="mb-1">{{chat.lastMessage}}</p>
+                        <i class='bx bx-chevron-down'>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item"><i class="bx bx-trash"></i>Delete</a></li>
+                                <li><a class="dropdown-item"> <i class='bx bxs-volume-mute'></i>Muted</a></li>
+                            </ul>
+                        </i>
+                    </div>
                 </div>
             </ng-container>
 

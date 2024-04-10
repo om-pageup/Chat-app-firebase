@@ -28,3 +28,31 @@
 .list-group{
     cursor: pointer;
 }
+
+
+.show-option .bx-chevron-down {
+    display: none;
+}
+
+.show-option .dropdown-menu {
+    display: none;
+}
+
+.show-option:hover .bx-chevron-down {
+    display: block;
+    font-size: 25px;
+    cursor: pointer;
+}
+
+.bx-chevron-down:hover .dropdown-menu {
+    display: block;
+}
+
+.dropdown-menu{
+    .dropdown-item{
+        font-size: 19px;
+        i{
+            padding: 0 6px;
+        }
+    }
+}
