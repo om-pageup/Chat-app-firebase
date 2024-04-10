@@ -11,7 +11,7 @@ export class UtilService {
   public sendMessageE: EventEmitter<boolean> = new EventEmitter<boolean>();
   public isListennotificationE: EventEmitter<number> = new EventEmitter<number>();
   public getChatByIdE: EventEmitter<number> = new EventEmitter<number>();
-  public getChat: EventEmitter<ChatBoxI> = new EventEmitter<ChatBoxI>();
+  public updateNameInChat: EventEmitter<string> = new EventEmitter<string>();
   
   public chatClickedE: EventEmitter<number> = new EventEmitter<number>();
   public increaseChatCountE: EventEmitter<NumberString> = new EventEmitter<NumberString>();
@@ -21,6 +21,7 @@ export class UtilService {
   public refreshChatListE: EventEmitter<boolean> = new EventEmitter<boolean>();
 
 
+  public isAlreadyExists: boolean = false;
   public loggedInUserId: number = -1;
   public receiverId: number = -1;
   public currentOpenedChat: number = -1;

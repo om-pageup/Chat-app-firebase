@@ -42,16 +42,15 @@ export class ChatListComponent extends ComponentBase implements OnInit {
   }
 
 
-  public getChats(id: number, allChat: ChatBoxI, index: number) {
+  public getChats(id: number, allChat: string, index: number) {
     this.chatBoxList[index].newMessages = 0;
     this._utilService.currentOpenedChat = id;
 
     this._utilService.chatClickedE.emit(id);
 
-    console.log(id);
 
     // to display name in chat header
-    this._utilService.getChat.emit(allChat);
+    this._utilService.updateNameInChat.emit(allChat);
   }
 
   public getSearchedUserChats(user: IGetAllUser) {
@@ -59,19 +58,27 @@ export class ChatListComponent extends ComponentBase implements OnInit {
     for (let userChats of this.chatBoxList) {
       if (userChats.recieverId == user.id) {
         isAlreadyExists = true;
+        this._utilService.isAlreadyExists = true;
         this._utilService.showSearchedChatE.emit(user.id);
-        this._utilService.getChat.emit(userChats);
+        this._utilService.updateNameInChat.emit(userChats.recieverName);
+        this._utilService.currentOpenedChat = user.id;
         break;
       }
       else if (userChats.employeeId == user.id) {
+        this._utilService.isAlreadyExists = true;
         isAlreadyExists = true;
         this._utilService.showSearchedChatE.emit(user.id);
-        this._utilService.getChat.emit(userChats);
+        this._utilService.updateNameInChat.emit(userChats.employeeName);
+        this._utilService.currentOpenedChat = user.id;
         break;
+      }
+      else{
+        this._utilService.isAlreadyExists = false;
       }
     }
 
     if (!isAlreadyExists) {
+      console.log("isAlreadyExists ", isAlreadyExists);
       this._utilService.showSearchedUserNameInChatHeaderE.emit(user);
     }
   }

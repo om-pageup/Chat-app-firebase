@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { GetLoggedInUserDetailI, GetMessageI } from '../../../response/responseG.response';
 import { ChatBoxI, MessageI } from '../../../model/chat.model';
 import { GetMessagePaginationI } from '../../../model/pagination.model';
@@ -7,7 +7,6 @@ import { UtilService } from '../../../../services/util.service';
 import { APIRoutes } from '../../../../shared/constants/apiRoutes.constant';
 import { FirebaseService } from '../../../../services/firebase.service';
 import { CGetAllUser, IGetAllUser } from '../../../response/user.response';
-import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -15,12 +14,13 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './chat-box.component.html',
   styleUrl: './chat-box.component.scss'
 })
-export class ChatBoxComponent extends ComponentBase implements OnInit {
+export class ChatBoxComponent extends ComponentBase implements OnInit, AfterViewInit {
   @ViewChild('scrollframe', { static: false }) scrollFrame!: ElementRef;
   @ViewChildren('item') itemElements!: QueryList<any>;
   private scrollContainer: any;
   public isScrollToBottom: boolean = true;
-  public isSendMsg: boolean = false;
+  public isSendMsg: boolean = false
+  public Name: string = "";
 
 
   // when user is searched
@@ -82,6 +82,8 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
         this._utilService.receiverId = receiverId;
         this.recevierId = receiverId;
         console.log(receiverId);
+        console.log("getChatById called");
+        this.options.index = 0;
         this.getChatById(receiverId);
       }
     )
@@ -91,16 +93,17 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
       }
     )
 
-    this._utilService.getChat.subscribe(
+    this._utilService.updateNameInChat.subscribe(
       (res) => {
         console.log(res);
-        this.userDetail = res
+        // this.userDetail = res
+        this.Name = res;
       }
     );
 
     this._utilService.showSearchedChatE.subscribe(
       (id: number) => {
-        console.log(id);
+        this.options.index = 0;
         this.postAPICallPromise<GetMessagePaginationI, GetMessageI<MessageI[]>>(APIRoutes.getMessageById(id), this.options, this.headerOption).then(
           (res) => {
             this.showChatMessages = true;
@@ -116,8 +119,10 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
     this._utilService.showSearchedUserNameInChatHeaderE.subscribe(
       (user: IGetAllUser) => {
         this.recevierId = user.id;
+        this._utilService.currentOpenedChat = user.id;
         this.messageList = [];
         this.searchedUserChat = user;
+        this.Name = user.employeeName;
         this.isSearchedUserChat = true;
         this.showChatMessages = true;
       }
@@ -156,17 +161,10 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
     const scrolltop = this.scrollFrame.nativeElement.scrollTop;
     // const isAtBottom = this.scrollFrame.nativeElement.scrollHeight * 0.1;
 
-    if (scrolltop == 0) {
+    if (scrolltop == 0 && !this.isSearchedUserChat) {
       this.options.index++;
       this.getChatById(0);
     }
-
-    // let isApiCall:boolean=false;
-    // if(scrolltop<= isAtBottom){
-    //   this.options.index++;
-    //   this.getChatById(0);
-    //   // this.isApiCall=true;
-    // }
   }
 
 
@@ -199,6 +197,7 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
 
   private getChatById(id: number) {
 
+    console.log("inside getChatById()");
     if (this._utilService.currentOpenedChat != -1) {
       this.postAPICallPromise<GetMessagePaginationI, GetMessageI<MessageI[]>>(APIRoutes.getMessageById(this._utilService.currentOpenedChat), this.options, this.headerOption).then(
         (res) => {

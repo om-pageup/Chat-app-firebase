@@ -4,21 +4,34 @@
             <img src="../../../../assets/jethalal_1621940926.jpg" width="40px" height="40px" alt="">
         </div>
         <div class="col-10 name-section">
-            <div *ngIf="!isSearchedUserChat">
-                <ng-container *ngIf="_utilService.loggedInUserId != userDetail.recieverId; else otherU">
+            <div>
+                <ng-container>
+                    <h5>{{Name}}</h5>
+                    <small>Online</small>
+                </ng-container>
+            <!-- <div *ngIf="!isSearchedUserChat">
+                <ng-container>
+                    <h5>{{Name}}</h5>
+                    <small>Online</small>
+                </ng-container> -->
+                <!-- <ng-container *ngIf="_utilService.loggedInUserId != userDetail.recieverId; else otherU">
                     <h5>{{userDetail.recieverName}}</h5>
                     <small>Online</small>
                 </ng-container>
                 <ng-template #otherU>
                     <h5>{{userDetail.employeeName}}</h5>
                     <small>Online</small>
-                </ng-template>
+                </ng-template> -->
             </div>
 
-            <div *ngIf="isSearchedUserChat">
+            <!-- <div *ngIf="isSearchedUserChat">
+                <h5>{{Name}}</h5>
+                <small>Online</small>
+            </div> -->
+            <!-- <div *ngIf="isSearchedUserChat">
                 <h5>{{searchedUserChat.employeeName}}</h5>
                 <small>Online</small>
-            </div>
+            </div> -->
         </div>
         <div class="col-1 option-bar">
             <i class='bx bx-menu'></i>

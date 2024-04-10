@@ -20,7 +20,7 @@
             aria-current="true">
 
             <ng-container *ngIf="_utilService.loggedInUserId != chat.recieverId; else otherU">
-                <div (click)="getChats(chat.recieverId,chat, i)">
+                <div (click)="getChats(chat.recieverId,chat.recieverName, i)">
                     <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1">{{chat.recieverName}}, {{chat.recieverId}}</h5>
                         <span *ngIf="chat.newMessages > 0"
@@ -31,7 +31,7 @@
             </ng-container>
 
             <ng-template #otherU>
-                <div (click)="getChats(chat.employeeId,chat, i)">
+                <div (click)="getChats(chat.employeeId,chat.employeeName, i)">
                     <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1">{{chat.employeeName}} , {{chat.employeeId}}</h5>
                         <span *ngIf="chat.newMessages > 0"
