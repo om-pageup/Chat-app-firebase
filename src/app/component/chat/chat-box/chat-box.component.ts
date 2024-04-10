@@ -115,11 +115,11 @@ export class ChatBoxComponent extends ComponentBase implements OnInit {
 
     this._utilService.showSearchedUserNameInChatHeaderE.subscribe(
       (user: IGetAllUser) => {
+        this.recevierId = user.id;
         this.messageList = [];
         this.searchedUserChat = user;
         this.isSearchedUserChat = true;
         this.showChatMessages = true;
-        this.recevierId = user.id;
       }
     )
 

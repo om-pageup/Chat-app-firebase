@@ -55,11 +55,7 @@ export class ChatListComponent extends ComponentBase implements OnInit {
   }
 
   public getSearchedUserChats(user: IGetAllUser) {
-    console.log(user);
     let isAlreadyExists: boolean = false;
-
-
-
     for (let userChats of this.chatBoxList) {
       if (userChats.recieverId == user.id) {
         isAlreadyExists = true;
@@ -78,7 +74,6 @@ export class ChatListComponent extends ComponentBase implements OnInit {
     if (!isAlreadyExists) {
       this._utilService.showSearchedUserNameInChatHeaderE.emit(user);
     }
-
   }
 
   public onSearch() {
