@@ -35,7 +35,7 @@
 }
 
 .body{
-    background: url(../../../../assets/backgrnd.png);
+    background-image: url(../../../../assets/backgrnd.png);
     min-height: 555px;
     background-color: #efeae2;
     
@@ -158,7 +158,7 @@
     .message-box {
         display: flex;
         align-items: center;
-
+        position: relative;
         i {
             font-size: 25px;
             padding: 5px;
@@ -173,6 +173,12 @@
 
         input:focus-visible{
             outline: none;
+        }
+        .bx-send{
+          position: absolute;
+          right: 0;
+          margin: 0 10px;
+          cursor: pointer;
         }
     }
 
