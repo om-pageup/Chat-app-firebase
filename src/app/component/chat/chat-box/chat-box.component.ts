@@ -21,22 +21,15 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
   public isScrollToBottom: boolean = true;
   public isSendMsg: boolean = false
   public Name: string = "";
-
-
-  // when user is searched
   public isSearchedUserChat: boolean = false;
   public searchedUserChat: CGetAllUser = new CGetAllUser();
-
-
   public preScrollH: number = 0;
-
   private options: GetMessagePaginationI = {
     isPagination: true,
     index: 0,
     take: 20,
     search: ""
   }
-
   public messageList: MessageI[] = [];
   public recevierId: number = -1;
   public message: string = '';
@@ -53,20 +46,15 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
   };
 
   public showChatMessages: boolean = false;
-
-
-
   public showEmojiPicker: boolean = false;
 
   constructor(public _utilService: UtilService, private firebaseService: FirebaseService, private http: HttpClient) {
     super();
     this.isSearchedUserChat = false;
-
     _utilService.chatClickedE.subscribe(
       (id: number) => {
         this.recevierId = id;
         this.getChatByIdListen(id);
-
         if (id > -1)
           this.showChatMessages = true;
         else
@@ -76,13 +64,10 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
   }
 
   ngOnInit(): void {
-
     this._utilService.getChatByIdE.subscribe(
       (receiverId: number) => {
         this._utilService.receiverId = receiverId;
         this.recevierId = receiverId;
-        console.log(receiverId);
-        console.log("getChatById called");
         this.options.index = 0;
         this.getChatById(receiverId);
       }
@@ -92,11 +77,8 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
         this.getChatByIdListen(receiverId);
       }
     )
-
     this._utilService.updateNameInChat.subscribe(
       (res) => {
-        console.log(res);
-        // this.userDetail = res
         this.Name = res;
       }
     );
@@ -155,11 +137,11 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
       )
       this.message = '';
     }
-
   }
 
   public onScrollUp(event: Event) {
     const scrolltop = this.scrollFrame.nativeElement.scrollTop;
+    // const isAtBottom = this.scrollFrame.nativeElement.scrollHeight * 0.1;
     if (scrolltop == 0 && !this.isSearchedUserChat) {
       this.options.index++;
       this.getChatById(0);
@@ -168,7 +150,6 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
 
 
   private onItemElementsChanged(): void {
-
     if (this.isScrollToBottom) {
       this.scrollToBottom();
       this.isScrollToBottom = false;
@@ -201,7 +182,6 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
             this.messageList = [];
             this.isSendMsg = false;
           }
-
           for (let i = res.data.data.length - 1; i > -1; i--) {
             this.messageList.unshift(res.data.data[i]);
           }
@@ -210,7 +190,6 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
       )
     }
   }
-
 
   private getChatByIdListen(id: number) {
     this.options.index = 0;
@@ -225,22 +204,13 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
     }
   }
 
-
-  toggleEmojiPicker() {
-    console.log(this.showEmojiPicker);
+  public toggleEmojiPicker() {
     this.showEmojiPicker = !this.showEmojiPicker;
   }
 
-  addEmoji(event: any) {
-    console.log(this.message)
+  public addEmoji(event: any) {
     const { message } = this;
-    console.log(message);
-    console.log(`${event.emoji.native}`)
     const text = `${message}${event.emoji.native}`;
-
     this.message = text;
-    // this.showEmojiPicker = false;
   }
-
-
 }

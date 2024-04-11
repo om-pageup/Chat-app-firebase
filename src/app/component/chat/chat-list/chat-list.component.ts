@@ -22,13 +22,11 @@ export class ChatListComponent extends ComponentBase implements OnInit {
 
   constructor(public _utilService: UtilService) {
     super();
-
     this._utilService.refreshChatListE.subscribe(
       (res) => {
         this.getChatBox();
       }
     )
-
     this._utilService.increaseChatCountE.subscribe(
       (data: NumberString) => {
         this.increaseChatCountF(data);
@@ -49,10 +47,7 @@ export class ChatListComponent extends ComponentBase implements OnInit {
   public getChats(id: number, allChat: string, index: number) {
     this.chatBoxList[index].newMessages = 0;
     this._utilService.currentOpenedChat = id;
-
     this._utilService.chatClickedE.emit(id);
-
-
     // to display name in chat header
     this._utilService.updateNameInChat.emit(allChat);
   }
@@ -80,9 +75,7 @@ export class ChatListComponent extends ComponentBase implements OnInit {
         this._utilService.isAlreadyExists = false;
       }
     }
-
     if (!isAlreadyExists) {
-      console.log("isAlreadyExists ", isAlreadyExists);
       this._utilService.showSearchedUserNameInChatHeaderE.emit(user);
     }
   }
@@ -93,7 +86,6 @@ export class ChatListComponent extends ComponentBase implements OnInit {
 
 
   private filterSearch(str: string): IGetAllUser[] {
-
     if (str == "") {
       return [];
     }
@@ -108,7 +100,6 @@ export class ChatListComponent extends ComponentBase implements OnInit {
         this.chatBoxList = res.iterableData;
       }
     )
-
   }
 
 
@@ -143,7 +134,6 @@ export class ChatListComponent extends ComponentBase implements OnInit {
         if (chat.employeeId == data.id) {
           chat.newMessages++;
           chat.lastMessage = data.data;
-
           const newChat = chat;
           this.chatBoxList.splice(i, 1);
           this.chatBoxList.unshift(newChat);
@@ -152,7 +142,6 @@ export class ChatListComponent extends ComponentBase implements OnInit {
           if (chat.recieverId == data.id) {
             chat.newMessages++;
             chat.lastMessage = data.data;
-
             const newChat = chat;
             this.chatBoxList.splice(i, 1);
             this.chatBoxList.unshift(newChat);
