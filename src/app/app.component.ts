@@ -28,8 +28,7 @@ export class AppComponent extends ComponentBase implements OnInit {
         if (id) {
           this.showChatMessages = true;
           this.getLoggedInUserId();
-
-        }
+         }
         else
           this.showChatMessages = false;
       }

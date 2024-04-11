@@ -13,7 +13,7 @@ import { NumberString } from '../app/model/util.model';
 })
 export class FirebaseService extends ComponentBase {
 
-  constructor(private _utilService: UtilService){
+  constructor(private _utilService: UtilService) {
     super();
   }
 
@@ -48,10 +48,10 @@ export class FirebaseService extends ComponentBase {
         data: nofication.notification.body
       }
 
-      if(this._utilService.currentOpenedChat == senderID){
+      if (this._utilService.currentOpenedChat == senderID) {
         this._utilService.isListennotificationE.emit(senderID);
       }
-      else{
+      else {
         this._utilService.increaseChatCountE.emit(data);
       }
 
@@ -82,13 +82,13 @@ export class FirebaseService extends ComponentBase {
     })
   }
 
-  private saveToken(token: string){
-    const newToken: {systemToken: string} = {
+  private saveToken(token: string) {
+    const newToken: { systemToken: string } = {
       systemToken: token
     };
 
-    this.putAPICallPromise<{systemToken: string}, GetLoggedInUserDetailI<null>>(APIRoutes.updateSystemToken, newToken, this.headerOption).then(
-      (res) =>{
+    this.putAPICallPromise<{ systemToken: string }, GetLoggedInUserDetailI<null>>(APIRoutes.updateSystemToken, newToken, this.headerOption).then(
+      (res) => {
         console.log(res);
       }
     )
