@@ -19,7 +19,9 @@
         <div class="chat-container" #scrollframe (scroll)="onScrollUp($event)">
             <div class="message-box" *ngFor="let chats of messageList" #item
                 [ngClass]="{'friend-message': recevierId == chats.senderId , 'my-message': recevierId != chats.senderId}">
-                <p>{{chats.message}}<br><span>07:43</span></p>
+                <p>{{chats.message}}<br><span>
+                    {{ chats.messageDate| utcToIndianTime }}
+                </span></p>
             </div>
         </div>
         <div class="row mx-0 footer">

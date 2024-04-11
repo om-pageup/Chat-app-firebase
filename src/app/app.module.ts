@@ -15,6 +15,7 @@ import { LoginComponent } from './component/login/login.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthInterceptor } from './interceptor/auth.interceptor';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
+import { UtcToIndianTimePipe } from './pipe/utc-to-indian-time.pipe';
 
 initializeApp(environment.firebase);
 @NgModule({
@@ -24,7 +25,8 @@ initializeApp(environment.firebase);
     RegisterComponent,
     ChatComponent,
     ChatListComponent,
-    ChatBoxComponent
+    ChatBoxComponent,
+    UtcToIndianTimePipe,
   ],
   imports: [
     BrowserModule,
