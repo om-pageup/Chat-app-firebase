@@ -54,7 +54,10 @@
                 <div class="emoji-container">
                     <emoji-mart class="emoji-mart" *ngIf="showEmojiPicker" (emojiSelect)="addEmoji($event)"
                         title="Pick your emoji…"></emoji-mart>
+                    <emoji-mart class="emoji-mart" *ngIf="showEmojiPicker" (emojiSelect)="addEmoji($event)"
+                        title="Pick your emoji…"></emoji-mart>
                 </div>
+
 
                 <div class="btn-group dropup">
                     <i data-bs-toggle="dropdown" aria-expanded="false" class='bx bx-plus'></i>
@@ -78,6 +81,8 @@
                 </div>
                 <input type="text" placeholder="Type a message" [(ngModel)]="message" (keydown.enter)="sendMessage()">
                 <i class='bx bx-send' (click)="sendMessage()"></i>
+
+
 
 
             </div>

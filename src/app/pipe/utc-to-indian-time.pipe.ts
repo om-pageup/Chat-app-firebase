@@ -17,7 +17,7 @@ export class UtcToIndianTimePipe implements PipeTransform {
       hour12: true,
       hour: 'numeric' as const, // Specify 'numeric' instead of 'string'
       minute: 'numeric' as const,
-      second: 'numeric' as const
+      // second: 'numeric' as const
     };
 
     return indianTime.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', ...options });

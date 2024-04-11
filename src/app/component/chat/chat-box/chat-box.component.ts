@@ -61,7 +61,11 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
           this.showChatMessages = false;
       }
     )
+
   }
+
+
+
 
   ngOnInit(): void {
     this._utilService.getChatByIdE.subscribe(
@@ -93,6 +97,7 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
             this.messageList = res.data.data;
             this.receiverStystemToken = res.data.systemToken;
             this.isScrollToBottom = true;
+
           }
         )
       }
@@ -180,6 +185,8 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
     });
   }
   private scrollToHalf(): void {
+
+
     this.scrollContainer.scroll({
       top: this.scrollContainer.scrollHeight - this.preScrollH,
       left: 0,
@@ -227,4 +234,9 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
     const text = `${message}${event.emoji.native}`;
     this.message = text;
   }
+
+
 }
+
+
+
