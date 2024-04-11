@@ -15,10 +15,53 @@
 
 
     <div class="list-group">
-        <a *ngFor="let chat of chatBoxList; let i=index" class="list-group-item list-group-item-action c-p-s"
-            aria-current="true">
+        <a *ngFor="let chat of chatBoxList; let i=index" class="list-group-item list-group-item-action c-p-s" aria-current="true">
 
-            <ng-container *ngIf="_utilService.loggedInUserId != chat.recieverId; else otherU">
+            @if (_utilService.loggedInUserId != chat.recieverId) {
+            <div (click)="getChats(chat.recieverId,chat.recieverName, i)" class="show-option">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{chat.recieverName}}, {{chat.recieverId}}</h5>
+                    <span *ngIf="chat.newMessages > 0" class="badge bg-primary rounded-pill">{{chat.newMessages}}</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    @if (chat.lastMessage.length>30) {
+                    <p class="mb-1">{{chat.lastMessage | slice : 0 : 30}}...</p>
+                    }
+                    @else {
+                    <p class="mb-1">{{chat.lastMessage}}</p>
+                    }
+                    <i class='bx bx-chevron-down'>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item"><i class="bx bx-trash"></i>Delete</a></li>
+                            <li><a class="dropdown-item"> <i class='bx bxs-volume-mute'></i>Muted</a></li>
+                        </ul>
+                    </i>
+                </div>
+            </div>
+            }
+            @else {
+            <div (click)="getChats(chat.employeeId,chat.employeeName, i)" class="show-option">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{chat.employeeName}} , {{chat.employeeId}}</h5>
+                    <span *ngIf="chat.newMessages > 0" class="badge bg-primary rounded-pill">{{chat.newMessages}}</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    @if (chat.lastMessage.length > 30) {
+                    <p class="mb-1">{{chat.lastMessage | slice : 0 : 30}}...</p>
+                    }@else {
+                    <p class="mb-1">{{chat.lastMessage}}</p>
+                    }
+                    <i class='bx bx-chevron-down'>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item"><i class="bx bx-trash"></i>Delete</a></li>
+                            <li><a class="dropdown-item"> <i class='bx bxs-volume-mute'></i>Muted</a></li>
+                        </ul>
+                    </i>
+                </div>
+            </div>
+            }
+
+            <!-- <ng-container *ngIf="_utilService.loggedInUserId != chat.recieverId; else otherU">
                 <div (click)="getChats(chat.recieverId,chat.recieverName, i)" class="show-option">
                     <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1">{{chat.recieverName}}, {{chat.recieverId}}</h5>
@@ -26,7 +69,12 @@
                             class="badge bg-primary rounded-pill">{{chat.newMessages}}</span>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <p class="mb-1">{{chat.lastMessage}}</p>
+                        @if (chat.lastMessage.length>30) {
+                            <p class="mb-1">{{chat.lastMessage | slice : 0 : 30}}...</p>
+                        }
+                        @else {
+                            <p class="mb-1">{{chat.lastMessage}}</p>
+                        }
                         <i class='bx bx-chevron-down'>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item"><i class="bx bx-trash"></i>Delete</a></li>
@@ -35,9 +83,9 @@
                         </i>
                     </div>
                 </div>
-            </ng-container>
+            </ng-container> -->
 
-            <ng-template #otherU>
+            <!-- <ng-template #otherU>
                 <div (click)="getChats(chat.employeeId,chat.employeeName, i)" class="show-option">
                     <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1">{{chat.employeeName}} , {{chat.employeeId}}</h5>
@@ -45,7 +93,11 @@
                             class="badge bg-primary rounded-pill">{{chat.newMessages}}</span>
                     </div>
                     <div class="d-flex justify-content-between">
+                        @if (chat.lastMessage.length > 30) {
+                        <p class="mb-1">{{chat.lastMessage | slice : 0 : 30}}...</p>
+                        }@else {
                         <p class="mb-1">{{chat.lastMessage}}</p>
+                        }
                         <i class='bx bx-chevron-down'>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item"><i class="bx bx-trash"></i>Delete</a></li>
@@ -54,7 +106,7 @@
                         </i>
                     </div>
                 </div>
-            </ng-template>
+            </ng-template> -->
 
         </a>
 

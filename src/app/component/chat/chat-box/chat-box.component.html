@@ -28,25 +28,16 @@
                     </p>
                 </div>
                 <div class="message-box my-message" *ngIf="recevierId != chats.senderId">
-                    <p>{{chats.message}} 
+                    <p style="word-wrap: break-word;">
+                        {{chats.message}} 
                         <i  (click)="deleteMessage(chats.id, i)"
-                            class='bx bxs-trash c-p-s' style="color: black;"></i> <br>
+                        class='bx bxs-trash c-p-s' style="color: black;"></i> 
                         <span>
                             {{ chats.messageDate| utcToIndianTime }}
                         </span>
                     </p>
                 </div>
             </ng-container>
-
-            <!-- <div class="message-box" *ngFor="let chats of messageList" #item [ngClass]="{'friend-message': recevierId == chats.senderId , 'my-message': recevierId != chats.senderId}">
-                <p>{{chats.message}} 
-                    <i  (click)="deleteMessage(chats.id)"
-                        class='bx bxs-trash c-p-s' style="color: black;"></i> <br>
-                    <span>
-                        {{ chats.messageDate| utcToIndianTime }}
-                    </span>
-                </p>
-            </div> -->
         </div>
         <div class="row mx-0 footer">
             <div class="message-box">
