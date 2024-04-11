@@ -97,4 +97,24 @@ export class ComponentBase {
 
         return postPromise;
     }
+
+    public deleteAPICallPromise<D, R>(url: string, data: D, hOption: HeaderOption): Promise<R> {
+        const hitUrl: string = `${this.baseUrl}${url}`;
+        const postPromise = new Promise<R>((resolve, reject) => {
+            this._httpClient.delete<R>(hitUrl, { body: data }).subscribe({
+                next: (res) => {
+                    resolve(res);
+                    this.isBtnLoaderActive = false;
+                },
+
+                error: (err) => {
+                    this.isBtnLoaderActive = false;
+                    console.log(err);
+                    reject(err);
+                }
+            })
+        });
+
+        return postPromise;
+    }
 }

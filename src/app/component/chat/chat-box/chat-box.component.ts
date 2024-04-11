@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { GetLoggedInUserDetailI, GetMessageI } from '../../../response/responseG.response';
+import { GetLoggedInUserDetailI, GetMessageI, ResponseGI } from '../../../response/responseG.response';
 import { ChatBoxI, MessageI } from '../../../model/chat.model';
 import { GetMessagePaginationI } from '../../../model/pagination.model';
 import { ComponentBase } from '../../../../shared/class/ComponentBase.class';
@@ -148,6 +148,20 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
     }
   }
 
+
+  public deleteMessage(id: number, index: number){
+    const msgtoDlt: { ids: number[] } ={
+      ids: [id]
+    }
+
+    this.deleteAPICallPromise<{ ids: number[] }, GetLoggedInUserDetailI<null>>(APIRoutes.deleteMessage, msgtoDlt, this.headerOption).then(
+      (res) =>{
+        this.messageList.splice(index, 1);
+        this.isScrollToBottom = true;
+        this._toastreService.success("Message deleted successfully");
+      }
+    )
+  }
 
   private onItemElementsChanged(): void {
     if (this.isScrollToBottom) {
