@@ -19,8 +19,9 @@ export class UtilService {
   public showSearchedUserNameInChatHeaderE: EventEmitter<IGetAllUser> = new EventEmitter<IGetAllUser>();
   public showSearchedChatE: EventEmitter<number> = new EventEmitter<number>();
   public refreshChatListE: EventEmitter<boolean> = new EventEmitter<boolean>();
+  public updateChatWhenSendingE: EventEmitter<string> = new EventEmitter<string>();
 
-
+  // public unreadMsgCount: number = 0;
   public isAlreadyExists: boolean = false;
   public loggedInUserId: number = -1;
   public receiverId: number = -1;

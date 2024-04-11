@@ -34,6 +34,10 @@ export class ChatListComponent extends ComponentBase implements OnInit {
         this.increaseChatCountF(data);
       }
     )
+
+    _utilService.updateChatWhenSendingE.subscribe((msg: string) => {
+      this.increaseChatCntOnSendingF(msg);
+    })
   }
 
   ngOnInit(): void {
@@ -72,7 +76,7 @@ export class ChatListComponent extends ComponentBase implements OnInit {
         this._utilService.currentOpenedChat = user.id;
         break;
       }
-      else{
+      else {
         this._utilService.isAlreadyExists = false;
       }
     }
@@ -105,6 +109,31 @@ export class ChatListComponent extends ComponentBase implements OnInit {
       }
     )
 
+  }
+
+
+  private increaseChatCntOnSendingF(str: string) {
+    console.log(str, this._utilService.currentOpenedChat);
+    this.chatBoxList.map(
+      (chat: ChatBoxI, i: number) => {
+        if (chat.employeeId == this._utilService.currentOpenedChat) {
+          chat.lastMessage = str;
+
+          const newChat = chat;
+          this.chatBoxList.splice(i, 1);
+          this.chatBoxList.unshift(newChat);
+        }
+        else {
+          if (chat.recieverId == this._utilService.currentOpenedChat) {
+            chat.lastMessage = str;
+
+            const newChat = chat;
+            this.chatBoxList.splice(i, 1);
+            this.chatBoxList.unshift(newChat);
+          }
+        }
+      }
+    )
   }
 
 

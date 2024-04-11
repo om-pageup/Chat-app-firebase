@@ -35,8 +35,8 @@ export class LoginComponent extends ComponentBase {
       this.postAPICallPromise<LoginDataI, ResponseDataI<UserI>>(APIRoutes.login, loginData, this.headerOption).then(
         (res) => {
           this._utilService.loggedInUserId = res.data.id;
-          this.firebaseService.requestPermission();
-          this.firebaseService.listen();
+          // this.firebaseService.requestPermission();
+          // this.firebaseService.listen();
           
           this._toastreService.success("Logged In success");
           this._router.navigate([APPRoutes.chat]);

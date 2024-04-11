@@ -6,6 +6,8 @@ import { UserI } from './response/user.response';
 import { UtilService } from '../services/util.service';
 import { Router } from '@angular/router';
 
+import { Title } from '@angular/platform-browser';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

@@ -13,7 +13,7 @@ import { NumberString } from '../app/model/util.model';
 })
 export class FirebaseService extends ComponentBase {
 
-  constructor(private _utilService: UtilService){
+  constructor(private _utilService: UtilService) {
     super();
   }
 
@@ -30,7 +30,12 @@ export class FirebaseService extends ComponentBase {
             console.log('No registration token available. Request permission to generate one.');
           }
         }).catch((err) => {
-          console.log('An error occurred while retrieving token. ', err);
+          // console.log('An error occurred while retrieving token. ', err);
+          console.log('Error retrieving token. ', err);
+          if (err.code === 'messaging/permission-blocked') {
+            console.log('Notification access denied by the user.');
+            // Handle notification access denial here
+          }
         });
   }
 
@@ -39,7 +44,7 @@ export class FirebaseService extends ComponentBase {
     onMessage(messaging, (payload) => {
 
       const nofication = payload as NotificationResponse;
-      console.log('Message received. ', payload.data);
+      console.log('Message received. ', payload);
 
       const senderID: number = parseInt(nofication.data['gcm.notification.userId']);
 
@@ -48,15 +53,15 @@ export class FirebaseService extends ComponentBase {
         data: nofication.notification.body
       }
 
-      if(this._utilService.currentOpenedChat == senderID){
+      if (this._utilService.currentOpenedChat == senderID) {
         this._utilService.isListennotificationE.emit(senderID);
       }
-      else{
+      else {
         this._utilService.increaseChatCountE.emit(data);
       }
-
     });
   }
+
 
 
   public sendNotification(obj: { receiverSystemToken: string, title: string, body: string }, loggedInUserId: number) {
@@ -82,13 +87,13 @@ export class FirebaseService extends ComponentBase {
     })
   }
 
-  private saveToken(token: string){
-    const newToken: {systemToken: string} = {
+  private saveToken(token: string) {
+    const newToken: { systemToken: string } = {
       systemToken: token
     };
 
-    this.putAPICallPromise<{systemToken: string}, GetLoggedInUserDetailI<null>>(APIRoutes.updateSystemToken, newToken, this.headerOption).then(
-      (res) =>{
+    this.putAPICallPromise<{ systemToken: string }, GetLoggedInUserDetailI<null>>(APIRoutes.updateSystemToken, newToken, this.headerOption).then(
+      (res) => {
         console.log(res);
       }
     )

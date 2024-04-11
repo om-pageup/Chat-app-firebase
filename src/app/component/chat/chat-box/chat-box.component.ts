@@ -145,6 +145,7 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
       }
       this.postAPICallPromise<{ message: string }, GetLoggedInUserDetailI<null>>(APIRoutes.sendMessage(this.recevierId), data, this.headerOption).then(
         (res) => {
+          this._utilService.updateChatWhenSendingE.emit(data.message);
           if (this.isSearchedUserChat) {
             this._utilService.refreshChatListE.emit(true);
           }
@@ -159,8 +160,6 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
 
   public onScrollUp(event: Event) {
     const scrolltop = this.scrollFrame.nativeElement.scrollTop;
-    // const isAtBottom = this.scrollFrame.nativeElement.scrollHeight * 0.1;
-
     if (scrolltop == 0 && !this.isSearchedUserChat) {
       this.options.index++;
       this.getChatById(0);
@@ -183,7 +182,6 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
     this.scrollContainer.scroll({
       top: this.scrollContainer.scrollHeight,
       left: 0,
-      // behavior: 'smooth'
     });
   }
   private scrollToHalf(): void {
@@ -196,8 +194,6 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
   }
 
   private getChatById(id: number) {
-
-    console.log("inside getChatById()");
     if (this._utilService.currentOpenedChat != -1) {
       this.postAPICallPromise<GetMessagePaginationI, GetMessageI<MessageI[]>>(APIRoutes.getMessageById(this._utilService.currentOpenedChat), this.options, this.headerOption).then(
         (res) => {
@@ -217,8 +213,6 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
 
 
   private getChatByIdListen(id: number) {
-
-    console.log(id);
     this.options.index = 0;
     if (this._utilService.currentOpenedChat != -1) {
       this.postAPICallPromise<GetMessagePaginationI, GetMessageI<MessageI[]>>(APIRoutes.getMessageById(id), this.options, this.headerOption).then(
