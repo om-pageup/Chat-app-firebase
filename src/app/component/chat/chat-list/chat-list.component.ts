@@ -45,6 +45,7 @@ export class ChatListComponent extends ComponentBase implements OnInit {
 
 
   public getChats(id: number, allChat: string, index: number) {
+
     this.chatBoxList[index].newMessages = 0;
     this._utilService.currentOpenedChat = id;
     this._utilService.chatClickedE.emit(id);
