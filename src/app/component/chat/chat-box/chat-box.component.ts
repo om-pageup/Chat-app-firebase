@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren, viewChild } from '@angular/core';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { GetLoggedInUserDetailI, GetMessageI, ResponseGI } from '../../../response/responseG.response';
 import { ChatBoxI, MessageI } from '../../../model/chat.model';
 import { GetMessagePaginationI } from '../../../model/pagination.model';
@@ -21,6 +22,8 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
   @ViewChild(ConfirmationComponent) ConfirmationComponentObj !: ConfirmationComponent;
   @ViewChild('scrollframe', { static: false }) scrollFrame!: ElementRef;
   @ViewChildren('item') itemElements!: QueryList<any>;
+
+  @ViewChild("fileDropRef", { static: false }) fileDropEl!: ElementRef;
 
   private ConvertToBaseobj = new ConvertToBase();
   private scrollContainer: any;
@@ -59,7 +62,7 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
   public selectedFileName: string = "";
   public inputType: string = "text";
   public isShowFiletypeInput: boolean = false;
-  
+
 
   public showChatMessages: boolean = false;
   public showEmojiPicker: boolean = false;
@@ -138,35 +141,33 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
     this.itemElements.changes.subscribe(_ => this.onItemElementsChanged());
   }
 
-  public onMediaSelect(event: any ){
+  public onMediaSelect(event: any) {
     this.selectedDocument = "";
 
     this.ConvertToBaseobj.imageToBase64Promise(event).then(
-      (res: string) =>{
+      (res: string) => {
         this.selectedMedia = res;
         this.selectedFileName = event.target.files[0].name;
       }
     )
   }
-  public onDocumentSelect(event: any){
+
+  public onFileDropped(event: any) {
+    this.selectedFileName = event.name;
+  }
+
+  public onDocumentSelect(event: any) {
     this.selectedMedia = "";
     this.ConvertToBaseobj.pdfToBase64Promise(event).then(
-      (res: string) =>{
+      (res: string) => {
         this.selectedDocument = res;
         this.selectedFileName = event.target.files[0].name;
       }
     )
   }
 
-  public onFileDrop(event: any){
-    this.isShowFiletypeInput = true;
-    console.log(this.isShowFiletypeInput);
-    this.inputType = "text";
-    console.log(event);
-  }
-
   public sendMessage() {
-    this.showEmojiPicker=false;
+    this.showEmojiPicker = false;
     this.options.index = 0;
     this.isScrollToBottom = true;
     this.isSendMsg = true;
@@ -190,12 +191,13 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
 
   public onScrollUp(event: Event) {
     const scrolltop = this.scrollFrame.nativeElement.scrollTop;
-    // const isAtBottom = this.scrollFrame.nativeElement.scrollHeight * 0.1;
     if (scrolltop == 0 && !this.isSearchedUserChat) {
       this.options.index++;
       this.getChatById(0);
     }
   }
+
+
 
 
   public deleteMessage(id: number, index: number) {

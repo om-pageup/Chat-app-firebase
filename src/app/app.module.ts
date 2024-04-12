@@ -19,6 +19,7 @@ import { UtcToIndianTimePipe } from './shared/pipe/utc-to-indian-time.pipe';
 import { ConfirmationComponent } from './shared/component/confirmation/confirmation.component';
 
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { DndDirective } from './shared/directives/dnd.directive';
 
 initializeApp(environment.firebase);
 @NgModule({
@@ -31,6 +32,7 @@ initializeApp(environment.firebase);
     ChatBoxComponent,
     UtcToIndianTimePipe,
     ConfirmationComponent,
+    DndDirective,
   ],
   imports: [
     BrowserModule,
