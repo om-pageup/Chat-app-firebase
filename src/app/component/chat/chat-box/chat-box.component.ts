@@ -84,6 +84,12 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
   }
 
 
+  file: any;
+
+  getFile(event: any) {
+    this.file = event.target.files[0];
+    console.log("file", this.file);
+  }
 
 
   ngOnInit(): void {
