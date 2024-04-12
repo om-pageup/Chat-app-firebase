@@ -3,9 +3,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LoginDataI, LoginModelI } from '../../model/login.model';
 import { FirebaseService } from '../../../services/firebase.service';
 import { UtilService } from '../../../services/util.service';
-import { ComponentBase } from '../../../shared/class/ComponentBase.class';
-import { APPRoutes } from '../../../shared/constants/appRoutes.contant';
-import { APIRoutes } from '../../../shared/constants/apiRoutes.constant';
+import { ComponentBase } from '../../shared/class/ComponentBase.class';
+import { APPRoutes } from '../../shared/constants/appRoutes.contant';
+import { APIRoutes } from '../../shared/constants/apiRoutes.constant';
 import { ResponseDataI } from '../../response/responseG.response';
 import { UserI } from '../../response/user.response';
 

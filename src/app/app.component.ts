@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FirebaseService } from '../services/firebase.service';
-import { ComponentBase } from '../shared/class/ComponentBase.class';
+import { ComponentBase } from './shared/class/ComponentBase.class';
 import { GetLoggedInUserDetailI } from './response/responseG.response';
 import { UserI } from './response/user.response';
 import { UtilService } from '../services/util.service';

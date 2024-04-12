@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ChatBoxC, ChatBoxI } from '../../../model/chat.model';
 import { ResponseGI, ResponseIterableI } from '../../../response/responseG.response';
-import { ComponentBase } from '../../../../shared/class/ComponentBase.class';
+import { ComponentBase } from '../../../shared/class/ComponentBase.class';
 import { UtilService } from '../../../../services/util.service';
-import { APIRoutes } from '../../../../shared/constants/apiRoutes.constant';
+import { APIRoutes } from '../../../shared/constants/apiRoutes.constant';
 import { NumberString } from '../../../model/util.model';
 import { IGetAllUser, UserI } from '../../../response/user.response';
 import { IEmplyeeOptions } from '../../../model/option.model';
