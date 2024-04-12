@@ -20,7 +20,7 @@
 
             <ng-container  *ngFor="let chats of messageList; let i=index" #item>
                 <div class="message-box friend-message" *ngIf="recevierId == chats.senderId" >
-                    <p>{{chats.message}} 
+                    <p style="word-wrap: break-word;">{{chats.message}} 
                          <br>
                         <span>
                             {{ chats.messageDate| utcToIndianTime }}
