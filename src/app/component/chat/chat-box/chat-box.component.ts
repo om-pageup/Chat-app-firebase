@@ -166,6 +166,7 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
   }
 
   public sendMessage() {
+    this.showEmojiPicker=false;
     this.options.index = 0;
     this.isScrollToBottom = true;
     this.isSendMsg = true;
