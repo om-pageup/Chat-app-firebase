@@ -16,6 +16,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthInterceptor } from './interceptor/auth.interceptor';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
 import { UtcToIndianTimePipe } from './shared/pipe/utc-to-indian-time.pipe';
+import { ConfirmationComponent } from './shared/component/confirmation/confirmation.component';
+
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 initializeApp(environment.firebase);
 @NgModule({
@@ -27,6 +30,7 @@ initializeApp(environment.firebase);
     ChatListComponent,
     ChatBoxComponent,
     UtcToIndianTimePipe,
+    ConfirmationComponent,
   ],
   imports: [
     BrowserModule,
@@ -38,6 +42,7 @@ initializeApp(environment.firebase);
     BrowserAnimationsModule,
     PickerModule,
     ToastrModule.forRoot(),
+    ModalModule.forRoot()
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }

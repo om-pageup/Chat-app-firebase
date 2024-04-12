@@ -18,10 +18,10 @@
     <div class="row mx-0 body">
         <div class="chat-container" #scrollframe (scroll)="onScrollUp($event)">
 
-            <ng-container  *ngFor="let chats of messageList; let i=index" #item>
-                <div class="message-box friend-message" *ngIf="recevierId == chats.senderId" >
-                    <p>{{chats.message}} 
-                         <br>
+            <ng-container *ngFor="let chats of messageList; let i=index" #item>
+                <div class="message-box friend-message" *ngIf="recevierId == chats.senderId">
+                    <p>{{chats.message}}
+                        <br>
                         <span>
                             {{ chats.messageDate| utcToIndianTime }}
                         </span>
@@ -29,9 +29,8 @@
                 </div>
                 <div class="message-box my-message" *ngIf="recevierId != chats.senderId">
                     <p style="word-wrap: break-word;">
-                        {{chats.message}} 
-                        <i  (click)="deleteMessage(chats.id, i)"
-                        class='bx bxs-trash c-p-s' style="color: black;"></i> 
+                        {{chats.message}}
+                        <i (click)="deleteMessage(chats.id, i)" class='bx bxs-trash c-p-s' style="color: black;"></i>
                         <span>
                             {{ chats.messageDate| utcToIndianTime }}
                         </span>
@@ -39,6 +38,7 @@
                 </div>
             </ng-container>
         </div>
+
         <div class="row mx-0 footer">
             <div class="message-box">
                 <i class='bx bx-smile' (click)="toggleEmojiPicker()"></i>
@@ -57,7 +57,9 @@
                             <label for="file-upload" class="custom-file-upload">
                                 <i class='bx bxs-file-doc'></i>
                                 Document
-                                <input id="file-upload" type="file" accept=".xlsx,.xls,.doc, .docx,.ppt, .pptx,.pdf" />
+                                <input id="file-upload" type="file" (change)="onDocumentSelect($event)"
+                                    [formControl]="documentFormControl"
+                                    accept=".xlsx,.xls,.doc, .docx,.ppt, .pptx,.pdf" />
                             </label>
 
                         </li>
@@ -65,23 +67,40 @@
                             <label for="img-upload" class="custom-file-upload">
                                 <i class='bx bx-images'></i>
                                 Photos & Videos
-                                <input id="img-upload" type="file" accept="image/*,video/*" />
+                                <input id="img-upload" type="file" [formControl]="mediaFormControl"
+                                    (change)="onMediaSelect($event)" [value]="" accept="image/*,video/*" />
                             </label>
                         </li>
                     </ul>
                 </div>
-                <input type="text" placeholder="Type a message" [(ngModel)]="message" (keydown.enter)="sendMessage()">
+
+
+                @if (selectedFileName != "") {
+                <div class="selected-file-div-s">
+                    {{selectedFileName}}
+                    <i class='bx bx-x c-p' style="color: red;"
+                        (click)='selectedFileName="" || selectedDocument="" || selectedMedia=""'></i>
+                </div>
+                }
+
+                <input type="text" placeholder="Type a message" [(ngModel)]="message" (dragenter)="onFileDrop($event)"
+                    (keydown.enter)="sendMessage()">
                 <i class='bx bx-send' (click)="sendMessage()"></i>
-
-
-
-
             </div>
         </div>
     </div>
 </div>
+
+
 <div class="chat-container" [ngStyle]="{'display' : showChatMessages? 'none' :'block'}">
     <div class="container d-flex justify-content-center align-items-center">
         <img src="../../../../assets/chat-1873536_1280-removebg-preview.png" alt="">
     </div>
 </div>
+
+
+
+
+
+
+<app-confirmation></app-confirmation>

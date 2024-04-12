@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren, viewChild } from '@angular/core';
 import { GetLoggedInUserDetailI, GetMessageI, ResponseGI } from '../../../response/responseG.response';
 import { ChatBoxI, MessageI } from '../../../model/chat.model';
 import { GetMessagePaginationI } from '../../../model/pagination.model';
@@ -8,6 +8,9 @@ import { APIRoutes } from '../../../shared/constants/apiRoutes.constant';
 import { FirebaseService } from '../../../../services/firebase.service';
 import { CGetAllUser, IGetAllUser } from '../../../response/user.response';
 import { HttpClient } from '@angular/common/http';
+import { ConfirmationComponent } from '../../../shared/component/confirmation/confirmation.component';
+import { FormControl } from '@angular/forms';
+import { ConvertToBase } from '../../../shared/class/ConvertoBase64.class';
 
 @Component({
   selector: 'app-chat-box',
@@ -15,8 +18,11 @@ import { HttpClient } from '@angular/common/http';
   styleUrl: './chat-box.component.scss'
 })
 export class ChatBoxComponent extends ComponentBase implements OnInit, AfterViewInit {
+  @ViewChild(ConfirmationComponent) ConfirmationComponentObj !: ConfirmationComponent;
   @ViewChild('scrollframe', { static: false }) scrollFrame!: ElementRef;
   @ViewChildren('item') itemElements!: QueryList<any>;
+
+  private ConvertToBaseobj = new ConvertToBase();
   private scrollContainer: any;
   public isScrollToBottom: boolean = true;
   public isSendMsg: boolean = false
@@ -44,6 +50,16 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
     recieverName: '',
     lastActive: '',
   };
+
+  // for media and document uplaod
+  public documentFormControl: FormControl = new FormControl(null);
+  public mediaFormControl: FormControl = new FormControl(null);
+  public selectedDocument: string = "";
+  public selectedMedia: string = "";
+  public selectedFileName: string = "";
+  public inputType: string = "text";
+  public isShowFiletypeInput: boolean = false;
+  
 
   public showChatMessages: boolean = false;
   public showEmojiPicker: boolean = false;
@@ -122,6 +138,33 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
     this.itemElements.changes.subscribe(_ => this.onItemElementsChanged());
   }
 
+  public onMediaSelect(event: any ){
+    this.selectedDocument = "";
+
+    this.ConvertToBaseobj.imageToBase64Promise(event).then(
+      (res: string) =>{
+        this.selectedMedia = res;
+        this.selectedFileName = event.target.files[0].name;
+      }
+    )
+  }
+  public onDocumentSelect(event: any){
+    this.selectedMedia = "";
+    this.ConvertToBaseobj.pdfToBase64Promise(event).then(
+      (res: string) =>{
+        this.selectedDocument = res;
+        this.selectedFileName = event.target.files[0].name;
+      }
+    )
+  }
+
+  public onFileDrop(event: any){
+    this.isShowFiletypeInput = true;
+    console.log(this.isShowFiletypeInput);
+    this.inputType = "text";
+    console.log(event);
+  }
+
   public sendMessage() {
     this.options.index = 0;
     this.isScrollToBottom = true;
@@ -154,18 +197,26 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
   }
 
 
-  public deleteMessage(id: number, index: number){
-    const msgtoDlt: { ids: number[] } ={
-      ids: [id]
-    }
+  public deleteMessage(id: number, index: number) {
 
-    this.deleteAPICallPromise<{ ids: number[] }, GetLoggedInUserDetailI<null>>(APIRoutes.deleteMessage, msgtoDlt, this.headerOption).then(
-      (res) =>{
-        this.messageList.splice(index, 1);
-        this.isScrollToBottom = true;
-        this._toastreService.success("Message deleted successfully");
+    this.ConfirmationComponentObj.openModal().then(
+      (res: boolean) => {
+        if (res) {
+          const msgtoDlt: { ids: number[] } = {
+            ids: [id]
+          }
+
+          this.deleteAPICallPromise<{ ids: number[] }, GetLoggedInUserDetailI<null>>(APIRoutes.deleteMessage, msgtoDlt, this.headerOption).then(
+            (res) => {
+              this.messageList.splice(index, 1);
+              this.isScrollToBottom = true;
+              this._toastreService.success("Message deleted successfully");
+            }
+          )
+        }
       }
     )
+
   }
 
   private onItemElementsChanged(): void {

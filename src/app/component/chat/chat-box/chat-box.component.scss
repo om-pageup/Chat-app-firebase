@@ -237,3 +237,19 @@ input[type="file"] {
   background-color: #000000;
   opacity: 1000000;
 }
+
+.selected-file-div-s {
+  display: flex;
+  width: 100%;
+  background-color: #b5bcb869;
+  height: 34px;
+  border-radius: 11px;
+  padding: 10px;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #cabebe;
+}
+
+.c-p{
+  cursor: pointer;
+}
