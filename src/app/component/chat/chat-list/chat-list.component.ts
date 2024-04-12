@@ -39,8 +39,14 @@ export class ChatListComponent extends ComponentBase implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getAllUser();
-    this.getChatBox();
+    this._utilService.getLoggedInUserDetialsF().then(
+      (res) =>{
+        this._utilService.loggedInUserId = res.data.id;
+        this._utilService.loggedInUserName = res.data.name;
+        this.getAllUser();
+        this.getChatBox();
+      }
+    )
   }
 
 
@@ -54,6 +60,9 @@ export class ChatListComponent extends ComponentBase implements OnInit {
   }
 
   public getSearchedUserChats(user: IGetAllUser) {
+    this.searchResult = [];
+    this.searchUser = "";
+    
     let isAlreadyExists: boolean = false;
     for (let userChats of this.chatBoxList) {
       if (userChats.recieverId == user.id) {
@@ -164,7 +173,7 @@ export class ChatListComponent extends ComponentBase implements OnInit {
 
     this.postAPICallPromise<IEmplyeeOptions, ResponseIterableI<IGetAllUser[]>>(APIRoutes.getAllEmployee, options, this.headerOption).then(
       (res) => {
-        this.allUserList = res.iterableData;
+        this.allUserList = res.iterableData.filter((user) => this._utilService.loggedInUserId != user.id);
       }
     )
   }

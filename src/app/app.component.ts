@@ -20,7 +20,7 @@ export class AppComponent extends ComponentBase implements OnInit {
   public username: string = '';
   public showChatMessages: boolean = false;
 
-  constructor(private firebaseService: FirebaseService, private _utilService: UtilService, private _route: Router) {
+  constructor(private firebaseService: FirebaseService, public _utilService: UtilService, private _route: Router) {
     super();
     this.firebaseService.requestPermission();
     this.firebaseService.listen();
@@ -29,7 +29,7 @@ export class AppComponent extends ComponentBase implements OnInit {
       (id: number) => {
         if (id) {
           this.showChatMessages = true;
-          this.getLoggedInUserId();
+          // this.getLoggedInUserId();
          }
         else
           this.showChatMessages = false;
@@ -39,7 +39,7 @@ export class AppComponent extends ComponentBase implements OnInit {
 
   ngOnInit(): void {
     if (localStorage.getItem("jwtToken")) {
-      this.getLoggedInUserId();
+      // this.getLoggedInUserId();
       this.showChatMessages = true;
     }
   }
