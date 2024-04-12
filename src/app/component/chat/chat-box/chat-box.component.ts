@@ -1,5 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren, viewChild } from '@angular/core';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { AfterViewInit, Component, ElementRef, HostListener, OnInit, QueryList, ViewChild, ViewChildren, viewChild } from '@angular/core';
 import { GetLoggedInUserDetailI, GetMessageI, ResponseGI } from '../../../response/responseG.response';
 import { ChatBoxI, MessageI } from '../../../model/chat.model';
 import { GetMessagePaginationI } from '../../../model/pagination.model';
@@ -67,7 +66,7 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
   public showChatMessages: boolean = false;
   public showEmojiPicker: boolean = false;
 
-  constructor(public _utilService: UtilService, private firebaseService: FirebaseService, private http: HttpClient) {
+  constructor(public _utilService: UtilService, private firebaseService: FirebaseService,private elementRef: ElementRef) {
     super();
     this.isSearchedUserChat = false;
     _utilService.chatClickedE.subscribe(
@@ -83,22 +82,13 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
 
   }
 
-
-  file: any;
-
-  getFile(event: any) {
-    this.file = event.target.files[0];
-    console.log("file", this.file);
-  }
-
-
   ngOnInit(): void {
     this._utilService.getChatByIdE.subscribe(
       (receiverId: number) => {
         this._utilService.receiverId = receiverId;
         this.recevierId = receiverId;
         this.options.index = 0;
-        this.getChatById(receiverId);
+        this.getChatById();
       }
     )
     this._utilService.isListennotificationE.subscribe(
@@ -199,7 +189,7 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
     const scrolltop = this.scrollFrame.nativeElement.scrollTop;
     if (scrolltop == 0 && !this.isSearchedUserChat) {
       this.options.index++;
-      this.getChatById(0);
+      this.getChatById();
     }
   }
 
@@ -255,7 +245,7 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
     this.preScrollH = this.scrollContainer.scrollHeight;
   }
 
-  private getChatById(id: number) {
+  private getChatById() {
     if (this._utilService.currentOpenedChat != -1) {
       this.postAPICallPromise<GetMessagePaginationI, GetMessageI<MessageI[]>>(APIRoutes.getMessageById(this._utilService.currentOpenedChat), this.options, this.headerOption).then(
         (res) => {
@@ -293,6 +283,16 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
     const { message } = this;
     const text = `${message}${event.emoji.native}`;
     this.message = text;
+  }
+
+  @HostListener('document:click', ['$event'])
+  public handleClick(event: MouseEvent) {
+    const clickedElement = event.target as HTMLElement;
+    const emojiIcon = this.elementRef.nativeElement.querySelector('.bx-smile');
+    const emojiContainer = this.elementRef.nativeElement.querySelector('.emoji-container');
+    if (!emojiIcon || (!emojiIcon.contains(clickedElement) && (!emojiContainer || !emojiContainer.contains(clickedElement)))) {
+      this.showEmojiPicker = false;
+    }
   }
 
 

@@ -7,7 +7,7 @@
             <div>
                 <ng-container>
                     <h5>{{Name}}</h5>
-                    <small>Online</small>
+                    <!-- <small>Online</small> -->
                 </ng-container>
             </div>
         </div>
@@ -16,6 +16,7 @@
         </div>
     </div>
     <div class="row mx-0 body"  appDnd (fileDropped)="onFileDropped($event)">
+     
         <div class="chat-container" #scrollframe (scroll)="onScrollUp($event)">
 
             <ng-container *ngFor="let chats of messageList; let i=index" #item>
@@ -52,8 +53,7 @@
                     <div class="emoji-container">
                         <emoji-mart class="emoji-mart" *ngIf="showEmojiPicker" (emojiSelect)="addEmoji($event)"
                             title="Pick your emoji…"></emoji-mart>
-                        <emoji-mart class="emoji-mart" *ngIf="showEmojiPicker" (emojiSelect)="addEmoji($event)"
-                            title="Pick your emoji…"></emoji-mart>
+                        
                     </div>
 
 
