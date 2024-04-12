@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import { environment } from '../environments/environment';
-import { ComponentBase } from '../shared/class/ComponentBase.class';
+import { ComponentBase } from '../app/shared/class/ComponentBase.class';
 import { GetLoggedInUserDetailI } from '../app/response/responseG.response';
-import { APIRoutes } from '../shared/constants/apiRoutes.constant';
+import { APIRoutes } from '../app/shared/constants/apiRoutes.constant';
 import { INotificationModel, NotificationResponse } from '../app/model/notification.model';
 import { UtilService } from './util.service';
 import { NumberString } from '../app/model/util.model';

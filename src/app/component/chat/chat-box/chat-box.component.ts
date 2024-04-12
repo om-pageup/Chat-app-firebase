@@ -2,9 +2,9 @@ import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, Vie
 import { GetLoggedInUserDetailI, GetMessageI, ResponseGI } from '../../../response/responseG.response';
 import { ChatBoxI, MessageI } from '../../../model/chat.model';
 import { GetMessagePaginationI } from '../../../model/pagination.model';
-import { ComponentBase } from '../../../../shared/class/ComponentBase.class';
+import { ComponentBase } from '../../../shared/class/ComponentBase.class';
 import { UtilService } from '../../../../services/util.service';
-import { APIRoutes } from '../../../../shared/constants/apiRoutes.constant';
+import { APIRoutes } from '../../../shared/constants/apiRoutes.constant';
 import { FirebaseService } from '../../../../services/firebase.service';
 import { CGetAllUser, IGetAllUser } from '../../../response/user.response';
 import { HttpClient } from '@angular/common/http';

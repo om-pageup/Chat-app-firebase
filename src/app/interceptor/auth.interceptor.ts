@@ -8,7 +8,7 @@ import {
 } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { APPRoutes } from '../../shared/constants/appRoutes.contant';
+import { APPRoutes } from '../shared/constants/appRoutes.contant';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {

@@ -3,8 +3,8 @@ import { EventEmitter, inject } from "@angular/core";
 import { ToastrService } from "ngx-toastr";
 import { Router } from "@angular/router";
 import { APIRoutes } from "../constants/apiRoutes.constant";
-import { HeaderOption } from "../../app/model/headerOption.model";
-import { environment } from "../../environments/environment";
+import { HeaderOption } from "../../model/headerOption.model";
+import { environment } from "../../../environments/environment";
 
 export class ComponentBase {
 

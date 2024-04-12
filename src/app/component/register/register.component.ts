@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { RegisterDataI, RegisterModelI } from '../../model/register.model';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ResponseGI } from '../../response/responseG.response';
-import { ComponentBase } from '../../../shared/class/ComponentBase.class';
-import { APPRoutes } from '../../../shared/constants/appRoutes.contant';
-import { APIRoutes } from '../../../shared/constants/apiRoutes.constant';
+import { ComponentBase } from '../../shared/class/ComponentBase.class';
+import { APPRoutes } from '../../shared/constants/appRoutes.contant';
+import { APIRoutes } from '../../shared/constants/apiRoutes.constant';
 
 
 @Component({
