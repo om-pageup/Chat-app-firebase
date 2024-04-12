@@ -18,10 +18,10 @@
     <div class="row mx-0 body">
         <div class="chat-container" #scrollframe (scroll)="onScrollUp($event)">
 
-            <ng-container  *ngFor="let chats of messageList; let i=index" #item>
-                <div class="message-box friend-message" *ngIf="recevierId == chats.senderId" >
-                    <p style="word-wrap: break-word;">{{chats.message}} 
-                         <br>
+            <ng-container *ngFor="let chats of messageList; let i=index" #item>
+                <div class="message-box friend-message" *ngIf="recevierId == chats.senderId">
+                    <p style="word-wrap: break-word;">{{chats.message}}
+                        <br>
                         <span>
                             {{ chats.messageDate| utcToIndianTime }}
                         </span>
@@ -29,9 +29,8 @@
                 </div>
                 <div class="message-box my-message" *ngIf="recevierId != chats.senderId">
                     <p style="word-wrap: break-word;">
-                        {{chats.message}} 
-                        <i  (click)="deleteMessage(chats.id, i)"
-                        class='bx bxs-trash c-p-s' style="color: black;"></i> 
+                        {{chats.message}}
+                        <i (click)="deleteMessage(chats.id, i)" class='bx bxs-trash c-p-s' style="color: black;"></i>
                         <span>
                             {{ chats.messageDate| utcToIndianTime }}
                         </span>
@@ -71,11 +70,8 @@
                     </ul>
                 </div>
                 <input type="text" placeholder="Type a message" [(ngModel)]="message" (keydown.enter)="sendMessage()">
+               
                 <i class='bx bx-send' (click)="sendMessage()"></i>
-
-
-
-
             </div>
         </div>
     </div>

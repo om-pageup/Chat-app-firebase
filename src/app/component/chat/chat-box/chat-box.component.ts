@@ -15,6 +15,7 @@ import { HttpClient } from '@angular/common/http';
   styleUrl: './chat-box.component.scss'
 })
 export class ChatBoxComponent extends ComponentBase implements OnInit, AfterViewInit {
+
   @ViewChild('scrollframe', { static: false }) scrollFrame!: ElementRef;
   @ViewChildren('item') itemElements!: QueryList<any>;
   private scrollContainer: any;
@@ -65,6 +66,12 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
   }
 
 
+  file: any;
+
+  getFile(event: any) {
+    this.file = event.target.files[0];
+    console.log("file", this.file);
+  }
 
 
   ngOnInit(): void {
@@ -123,7 +130,7 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
   }
 
   public sendMessage() {
-    this.showEmojiPicker=false;
+    this.showEmojiPicker = false;
     this.options.index = 0;
     this.isScrollToBottom = true;
     this.isSendMsg = true;
@@ -155,13 +162,13 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
   }
 
 
-  public deleteMessage(id: number, index: number){
-    const msgtoDlt: { ids: number[] } ={
+  public deleteMessage(id: number, index: number) {
+    const msgtoDlt: { ids: number[] } = {
       ids: [id]
     }
 
     this.deleteAPICallPromise<{ ids: number[] }, GetLoggedInUserDetailI<null>>(APIRoutes.deleteMessage, msgtoDlt, this.headerOption).then(
-      (res) =>{
+      (res) => {
         this.messageList.splice(index, 1);
         this.isScrollToBottom = true;
         this._toastreService.success("Message deleted successfully");
