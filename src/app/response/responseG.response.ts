@@ -33,6 +33,7 @@ export interface GetMessageI<R>{
     data: {
         data:R,
         systemToken: string;
+        isBlockedUser:boolean;
 
     };
 }

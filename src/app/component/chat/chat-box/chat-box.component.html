@@ -12,7 +12,29 @@
             </div>
         </div>
         <div class="col-1 option-bar">
-            <i class='bx bx-menu'></i>
+            <!-- <i class='bx bx-menu'></i> -->
+            <div class="btn-group dropup">
+                <i data-bs-toggle="dropdown" aria-expanded="false" class='bx bx-menu c-p-s'></i>
+                <ul class="dropdown-menu">
+                    <li (click)="blockUser()">
+                      
+                            <i class='bx bx-block'></i>
+                            {{userBlockState}}
+                            <!-- <input id="file-upload" type="file" (change)="onDocumentSelect($event)"
+                                [formControl]="documentFormControl"
+                                accept=".xlsx,.xls,.doc, .docx,.ppt, .pptx,.pdf" /> -->
+                        
+                    </li>
+                    <!-- <li>
+                        <label for="img-upload" class="custom-file-upload">
+                            <i class='bx bx-images'></i>
+                            Photos & Videos
+                            <input id="img-upload" type="file" [formControl]="mediaFormControl"
+                                (change)="onMediaSelect($event)" [value]="" accept="image/*,video/*" />
+                        </label>
+                    </li> -->
+                </ul>
+            </div>
         </div>
     </div>
     <div class="row mx-0 body"  appDnd (fileDropped)="onFileDropped($event)">
@@ -53,7 +75,6 @@
                     <div class="emoji-container">
                         <emoji-mart class="emoji-mart" *ngIf="showEmojiPicker" (emojiSelect)="addEmoji($event)"
                             title="Pick your emoji…"></emoji-mart>
-                        
                     </div>
 
 

@@ -62,9 +62,9 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
   public inputType: string = "text";
   public isShowFiletypeInput: boolean = false;
 
-
   public showChatMessages: boolean = false;
   public showEmojiPicker: boolean = false;
+  public userBlockState:string='';
 
   constructor(public _utilService: UtilService, private firebaseService: FirebaseService,private elementRef: ElementRef) {
     super();
@@ -112,7 +112,8 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
             this.messageList = res.data.data;
             this.receiverStystemToken = res.data.systemToken;
             this.isScrollToBottom = true;
-
+            // console.log(res.data.isBlockedUser);
+            
           }
         )
       }
@@ -197,12 +198,12 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
 
 
   public deleteMessage(id: number, index: number) {
-
     this.ConfirmationComponentObj.openModal().then(
       (res: boolean) => {
         if (res) {
-          const msgtoDlt: { ids: number[] } = {
-            ids: [id]
+          const msgtoDlt: { ids: number[],recieverId:number } = {
+            ids: [id],
+            recieverId:this.recevierId
           }
 
           this.deleteAPICallPromise<{ ids: number[] }, GetLoggedInUserDetailI<null>>(APIRoutes.deleteMessage, msgtoDlt, this.headerOption).then(
@@ -217,6 +218,36 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
     )
 
   }
+
+  public blockUser(){
+    if(this.userBlockState=="Block"){
+      this.postAPICallPromise<number,GetLoggedInUserDetailI<null>>(APIRoutes.blockUser(this.recevierId),this.recevierId,this.headerOption).then(
+        (res)=>{
+          if(res.status){
+            this.userBlockState='Unblock';
+            this._toastreService.success(res.message);
+          }
+          else{
+            this._toastreService.error(res.message)
+          }
+        }
+      )
+    }
+    else{
+      this.postAPICallPromise<number,GetLoggedInUserDetailI<null>>(APIRoutes.unBlockUser(this.recevierId),this.recevierId,this.headerOption).then(
+        (res)=>{
+          if(res.status){
+            this.userBlockState='Block';
+            this._toastreService.success(res.message);
+          }
+          else{
+            this._toastreService.error(res.message)
+          }
+        }
+      )
+    }
+  }
+
 
   private onItemElementsChanged(): void {
     if (this.isScrollToBottom) {
@@ -257,6 +288,13 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
             this.messageList.unshift(res.data.data[i]);
           }
           this.receiverStystemToken = res.data.systemToken;
+          if(res.data.isBlockedUser){
+            this.userBlockState="Unblock"
+          }
+          else{
+            this.userBlockState="Block"
+            console.log(this.userBlockState);
+          }
         }
       )
     }

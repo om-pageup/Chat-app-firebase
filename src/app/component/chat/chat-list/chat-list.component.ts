@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
 import { ChatBoxC, ChatBoxI } from '../../../model/chat.model';
 import { ResponseGI, ResponseIterableI } from '../../../response/responseG.response';
 import { ComponentBase } from '../../../shared/class/ComponentBase.class';
@@ -20,7 +20,7 @@ export class ChatListComponent extends ComponentBase implements OnInit {
   public searchResult: IGetAllUser[] = [];
   public searchUser: string = "";
 
-  constructor(public _utilService: UtilService) {
+  constructor(public _utilService: UtilService,private elementRef: ElementRef) {
     super();
     this._utilService.refreshChatListE.subscribe(
       (res) => {
@@ -176,5 +176,15 @@ export class ChatListComponent extends ComponentBase implements OnInit {
         this.allUserList = res.iterableData.filter((user) => this._utilService.loggedInUserId != user.id);
       }
     )
+  }
+
+  @HostListener('document:click', ['$event'])
+  public handleClick(event: MouseEvent) {
+    // const clickedElement = event.target as HTMLElement;
+    // const dropdown = this.elementRef.nativeElement.querySelector('.dropdown');
+    // if (!dropdown || (!dropdown.contains(clickedElement))) {
+    //   this.searchResult=[];
+    // }
+    this.searchResult=[];
   }
 }
