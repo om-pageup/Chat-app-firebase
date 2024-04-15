@@ -19,6 +19,7 @@ export class ChatListComponent extends ComponentBase implements OnInit {
   public allUserList: IGetAllUser[] = [];
   public searchResult: IGetAllUser[] = [];
   public searchUser: string = "";
+  public selectedIndex: number = -1;
 
   constructor(public _utilService: UtilService,private elementRef: ElementRef) {
     super();
@@ -40,7 +41,7 @@ export class ChatListComponent extends ComponentBase implements OnInit {
 
   ngOnInit(): void {
     this._utilService.getLoggedInUserDetialsF().then(
-      (res) =>{
+      (res) => {
         this._utilService.loggedInUserId = res.data.id;
         this._utilService.loggedInUserName = res.data.name;
         this.getAllUser();
@@ -59,10 +60,29 @@ export class ChatListComponent extends ComponentBase implements OnInit {
     this._utilService.updateNameInChat.emit(allChat);
   }
 
+  public onArrowDown() {
+    if(this.selectedIndex == this.searchResult.length -1){
+      this.selectedIndex = 0;
+    }
+    else{ 
+      this.selectedIndex ++;
+    }
+  }
+
+  public onArrowUp() {
+    if (this.selectedIndex > 0) {
+      this.selectedIndex--;
+    }
+  }
+  public onEnter() {
+    this.getSearchedUserChats(this.searchResult[this.selectedIndex]);
+    this.selectedIndex = -1;
+  }
+
   public getSearchedUserChats(user: IGetAllUser) {
     this.searchResult = [];
     this.searchUser = "";
-    
+
     let isAlreadyExists: boolean = false;
     for (let userChats of this.chatBoxList) {
       if (userChats.recieverId == user.id) {
