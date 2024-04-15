@@ -9,7 +9,9 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 export class ConfirmationComponent {
 
   constructor(private modalService: BsModalService){}
-  @Input('messageC') messageC: string = "Do you want to delete it ?"; 
+  public messageC: string = ""; 
+  public title: string = ""; 
+
   modalRef?: BsModalRef;
   resolve: any;
 
@@ -28,8 +30,10 @@ export class ConfirmationComponent {
     this.resolve(false);
   }
 
-  public openModal(){
-    this.modalRef = this.modalService.show(this.modalTemplate, { class: 'modal-sm' });
+  public openModal(Title:string,message:string){
+    this.messageC=message;
+    this.title=Title;
+    this.modalRef = this.modalService.show(this.modalTemplate, { class: 'modal-md' });
 
     //creating promise to wait for result, untill user clicks yes or no
     return new Promise<boolean>((resolve) =>{

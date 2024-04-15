@@ -1,7 +1,13 @@
 <ng-template #template>
-    <div class="modal-body text-center">
+    <div class="modal-header">
+        <h5 class="modal-title">{{title}}</h5>
+        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+      </div>
+    <div class="modal-body">
         <p>{{messageC}} </p>
-        <button type="button" class="btn btn-default" (click)="confirm()">Yes</button>
-        <button type="button" class="btn btn-primary" (click)="decline()">No</button>
     </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="decline()">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="confirm()">Submit</button>
+      </div>
 </ng-template>
