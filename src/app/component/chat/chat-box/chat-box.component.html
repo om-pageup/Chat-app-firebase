@@ -69,7 +69,7 @@
 
             </div> -->
 
-            <div class="row-mx-0">
+            <div *ngIf="userBlockState=='Block'" class="row-mx-0">
                 <div class="message-box">
                     <i class='bx bx-smile' (click)="toggleEmojiPicker()"></i>
                     <div class="emoji-container">
@@ -118,6 +118,9 @@
 
                     <i class='bx bx-send' (click)="sendMessage()"></i>
                 </div>
+            </div>
+            <div *ngIf="userBlockState=='Unblock'" class="row-mx-0 d-flex justify-content-center align-items-center">
+                <p>Can't send a message to blocked contact</p>
             </div>
 
         </div>

@@ -21,7 +21,6 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
   @ViewChild(ConfirmationComponent) ConfirmationComponentObj !: ConfirmationComponent;
   @ViewChild('scrollframe', { static: false }) scrollFrame!: ElementRef;
   @ViewChildren('item') itemElements!: QueryList<any>;
-
   @ViewChild("fileDropRef", { static: false }) fileDropEl!: ElementRef;
 
   private ConvertToBaseobj = new ConvertToBase();
@@ -52,7 +51,6 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
     recieverName: '',
     lastActive: '',
   };
-
   // for media and document uplaod
   public documentFormControl: FormControl = new FormControl(null);
   public mediaFormControl: FormControl = new FormControl(null);
@@ -79,7 +77,6 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
           this.showChatMessages = false;
       }
     )
-
   }
 
   ngOnInit(): void {
@@ -91,11 +88,13 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
         this.getChatById();
       }
     )
+
     this._utilService.isListennotificationE.subscribe(
       (receiverId: number) => {
         this.getChatByIdListen(receiverId);
       }
     )
+
     this._utilService.updateNameInChat.subscribe(
       (res) => {
         this.Name = res;
@@ -112,8 +111,6 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
             this.messageList = res.data.data;
             this.receiverStystemToken = res.data.systemToken;
             this.isScrollToBottom = true;
-            // console.log(res.data.isBlockedUser);
-
           }
         )
       }
@@ -130,7 +127,6 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
         this.showChatMessages = true;
       }
     )
-
   }
 
   ngAfterViewInit() {
@@ -140,7 +136,6 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
 
   public onMediaSelect(event: any) {
     this.selectedDocument = "";
-
     this.ConvertToBaseobj.imageToBase64Promise(event).then(
       (res: string) => {
         this.selectedMedia = res;
@@ -194,11 +189,8 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
     }
   }
 
-
-
-
   public deleteMessage(id: number, index: number) {
-    this.ConfirmationComponentObj.openModal().then(
+    this.ConfirmationComponentObj.openModal("Delete", "Do you want to delete it ?").then(
       (res: boolean) => {
         if (res) {
           const msgtoDlt: { ids: number[], recieverId: number } = {
@@ -216,38 +208,51 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
         }
       }
     )
-
   }
 
   public blockUser() {
+
     if (this.userBlockState == "Block") {
-      this.postAPICallPromise<number, GetLoggedInUserDetailI<null>>(APIRoutes.blockUser(this.recevierId), this.recevierId, this.headerOption).then(
-        (res) => {
-          if (res.status) {
-            this.userBlockState = 'Unblock';
-            this._toastreService.success(res.message);
-          }
-          else {
-            this._toastreService.error(res.message)
+      let message = "Blocked contacts will no longer be able to send you message";
+      this.ConfirmationComponentObj.openModal(`${this.userBlockState}`, message).then(
+        (res: boolean) => {
+          if (res) {
+            this.postAPICallPromise<number, GetLoggedInUserDetailI<null>>(APIRoutes.blockUser(this.recevierId), this.recevierId, this.headerOption).then(
+              (res) => {
+                if (res.status) {
+                  this.userBlockState = 'Unblock';
+                  this._toastreService.success(res.message);
+                }
+                else {
+                  this._toastreService.error(res.message)
+                }
+              }
+            )
           }
         }
       )
     }
     else {
-      this.postAPICallPromise<number, GetLoggedInUserDetailI<null>>(APIRoutes.unBlockUser(this.recevierId), this.recevierId, this.headerOption).then(
-        (res) => {
-          if (res.status) {
-            this.userBlockState = 'Block';
-            this._toastreService.success(res.message);
-          }
-          else {
-            this._toastreService.error(res.message)
+      let message = "Are you sure you want to unblock user ?";
+      this.ConfirmationComponentObj.openModal(`${this.userBlockState}`, message).then(
+        (res: boolean) => {
+          if (res) {
+            this.postAPICallPromise<number, GetLoggedInUserDetailI<null>>(APIRoutes.unBlockUser(this.recevierId), this.recevierId, this.headerOption).then(
+              (res) => {
+                if (res.status) {
+                  this.userBlockState = 'Block';
+                  this._toastreService.success(res.message);
+                }
+                else {
+                  this._toastreService.error(res.message)
+                }
+              }
+            )
           }
         }
       )
     }
   }
-
 
   private onItemElementsChanged(): void {
     if (this.isScrollToBottom) {
@@ -265,14 +270,12 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
       left: 0,
     });
   }
+
   private scrollToHalf(): void {
-
-
     this.scrollContainer.scroll({
       top: this.scrollContainer.scrollHeight - this.preScrollH,
       left: 0,
     });
-
     this.preScrollH = this.scrollContainer.scrollHeight;
   }
 
@@ -332,8 +335,6 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
       this.showEmojiPicker = false;
     }
   }
-
-
 }
 
 
