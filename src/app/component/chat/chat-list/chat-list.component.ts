@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { ChatBoxC, ChatBoxI } from '../../../model/chat.model';
 import { ResponseGI, ResponseIterableI } from '../../../response/responseG.response';
 import { ComponentBase } from '../../../shared/class/ComponentBase.class';
@@ -7,22 +7,37 @@ import { APIRoutes } from '../../../shared/constants/apiRoutes.constant';
 import { NumberString } from '../../../model/util.model';
 import { IGetAllUser, UserI } from '../../../response/user.response';
 import { IEmplyeeOptions } from '../../../model/option.model';
+import { Observable, Subject, debounceTime, distinctUntilChanged, switchMap, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-chat-list',
   templateUrl: './chat-list.component.html',
   styleUrl: './chat-list.component.scss'
 })
-export class ChatListComponent extends ComponentBase implements OnInit {
+export class ChatListComponent extends ComponentBase implements OnInit, OnDestroy {
 
   public chatBoxList: ChatBoxI[] = [];
   public allUserList: IGetAllUser[] = [];
   public searchResult: IGetAllUser[] = [];
   public searchUser: string = "";
   public selectedIndex: number = -1;
+  public userSearchSubject: Subject<string> = new Subject<string>();
+  private onDestroy$: Subject<void> = new Subject<void>();
+  private options: IEmplyeeOptions = {
+    isPagination: false,
+    index: 0,
+    take: 0,
+    search: "",
+    orders: 0,
+    orderBy: ""
+  }
+  // private getSearchedUser!: Observable<ResponseIterableI<IGetAllUser[]>>;
 
-  constructor(public _utilService: UtilService,private elementRef: ElementRef) {
+  constructor(public _utilService: UtilService, private elementRef: ElementRef) {
     super();
+
+    // this.getSearchedUser = this._httpClient.post<ResponseIterableI<IGetAllUser[]>>(`${this.baseUrl}${APIRoutes.getAllEmployee}`, this.options);
+
     this._utilService.refreshChatListE.subscribe(
       (res) => {
         this.getChatBox();
@@ -44,8 +59,25 @@ export class ChatListComponent extends ComponentBase implements OnInit {
       (res) => {
         this._utilService.loggedInUserId = res.data.id;
         this._utilService.loggedInUserName = res.data.name;
-        this.getAllUser();
         this.getChatBox();
+      }
+    )
+
+
+
+    this.userSearchSubject.pipe(
+      debounceTime(2000),
+    ).subscribe(
+      (userName) => {
+        this.onDestroy$.next();
+        this.options.search = userName;
+        this._utilService.search(this.options).pipe(
+          takeUntil(this.onDestroy$),
+        ).subscribe(
+          (res) => {
+            this.searchResult = res.iterableData.filter((user) => this._utilService.loggedInUserId != user.id);
+          }
+        )
       }
     )
   }
@@ -61,11 +93,11 @@ export class ChatListComponent extends ComponentBase implements OnInit {
   }
 
   public onArrowDown() {
-    if(this.selectedIndex == this.searchResult.length -1){
+    if (this.selectedIndex == this.searchResult.length - 1) {
       this.selectedIndex = 0;
     }
-    else{ 
-      this.selectedIndex ++;
+    else {
+      this.selectedIndex++;
     }
   }
 
@@ -111,17 +143,7 @@ export class ChatListComponent extends ComponentBase implements OnInit {
   }
 
   public onSearch() {
-    this.searchResult = this.filterSearch(this.searchUser);
-  }
-
-
-  private filterSearch(str: string): IGetAllUser[] {
-    if (str == "") {
-      return [];
-    }
-    return this.allUserList.filter(
-      (user) => user.employeeName.toLowerCase().includes(str)
-    );
+    this.userSearchSubject.next(this.searchUser);
   }
 
   private getChatBox() {
@@ -181,30 +203,13 @@ export class ChatListComponent extends ComponentBase implements OnInit {
     )
   }
 
-  private getAllUser() {
-    const options: IEmplyeeOptions = {
-      isPagination: false,
-      index: 0,
-      take: 0,
-      search: "",
-      orders: 0,
-      orderBy: ""
-    }
-
-    this.postAPICallPromise<IEmplyeeOptions, ResponseIterableI<IGetAllUser[]>>(APIRoutes.getAllEmployee, options, this.headerOption).then(
-      (res) => {
-        this.allUserList = res.iterableData.filter((user) => this._utilService.loggedInUserId != user.id);
-      }
-    )
-  }
-
   @HostListener('document:click', ['$event'])
   public handleClick(event: MouseEvent) {
-    // const clickedElement = event.target as HTMLElement;
-    // const dropdown = this.elementRef.nativeElement.querySelector('.dropdown');
-    // if (!dropdown || (!dropdown.contains(clickedElement))) {
-    //   this.searchResult=[];
-    // }
-    this.searchResult=[];
+    this.searchResult = [];
+  }
+
+  ngOnDestroy(): void {
+    this.onDestroy$.next();
+    this.onDestroy$.complete();
   }
 }

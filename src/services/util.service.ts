@@ -3,7 +3,8 @@ import { ChatBoxI } from '../app/model/chat.model';
 import { NumberString } from '../app/model/util.model';
 import { IGetAllUser, UserI } from '../app/response/user.response';
 import { ComponentBase } from '../app/shared/class/ComponentBase.class';
-import { GetLoggedInUserDetailI } from '../app/response/responseG.response';
+import { GetLoggedInUserDetailI, ResponseIterableI } from '../app/response/responseG.response';
+import { APIRoutes } from '../app/shared/constants/apiRoutes.constant';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class UtilService extends ComponentBase {
   public isListennotificationE: EventEmitter<number> = new EventEmitter<number>();
   public getChatByIdE: EventEmitter<number> = new EventEmitter<number>();
   public updateNameInChat: EventEmitter<string> = new EventEmitter<string>();
-  
+
   public chatClickedE: EventEmitter<number> = new EventEmitter<number>();
   public increaseChatCountE: EventEmitter<NumberString> = new EventEmitter<NumberString>();
   public showUser: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -32,6 +33,10 @@ export class UtilService extends ComponentBase {
 
   public getLoggedInUserDetialsF() {
     return this.getAPICallPromise<GetLoggedInUserDetailI<UserI>>('/userDetails', this.headerOption);
+  }
+
+  search(payload: any) {
+   return this._httpClient.post<ResponseIterableI<IGetAllUser[]>>(`${this.baseUrl}${APIRoutes.getAllEmployee}`, payload);
   }
 
 }
