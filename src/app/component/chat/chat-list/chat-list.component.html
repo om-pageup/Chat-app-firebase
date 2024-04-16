@@ -28,7 +28,7 @@
                     <span *ngIf="chat.newMessages > 0" class="badge bg-primary rounded-pill">{{chat.newMessages}}</span>
                     }
                     @else{
-                    <span >{{chat.lastMessageDate| chatlistTimeAgo }}</span>
+                    <span >{{chat.lastMessageDate| utcToIndianTime }}</span>
                     }
 
                 </div>

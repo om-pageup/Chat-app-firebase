@@ -151,7 +151,7 @@
 }
 
 .fileover {
-
+  border: 3px dotted red;
   // background-color: #FFF;
   opacity: 0.5;
   // background-color: #ababab;
@@ -275,12 +275,12 @@ input[type="file"] {
   display: flex;
   justify-content: center;
   align-items: center;
-  
-  .showDay{
+
+  .showDay {
     padding: 5px;
     color: #54656f;
     background-color: rgba(255, 255, 255, .95);
     border-radius: 4px;
-    
+
   }
 }
