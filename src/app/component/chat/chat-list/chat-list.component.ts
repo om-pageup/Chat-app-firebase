@@ -177,27 +177,32 @@ export class ChatListComponent extends ComponentBase implements OnInit, OnDestro
 
 
   private increaseChatCountF(data: NumberString) {
-    this.chatBoxList.map(
-      (chat: ChatBoxI, i: number) => {
-        console.log(chat);
-        if (chat.employeeId == data.id) {
-          chat.newMessages++;
-          chat.lastMessage = data.data;
-          const newChat = chat;
-          this.chatBoxList.splice(i, 1);
-          this.chatBoxList.unshift(newChat);
-        }
-        else {
-          if (chat.recieverId == data.id) {
-            chat.newMessages++;
-            chat.lastMessage = data.data;
-            const newChat = chat;
-            this.chatBoxList.splice(i, 1);
-            this.chatBoxList.unshift(newChat);
-          }
-        }
+    this.getAPICallPromise<ResponseIterableI<ChatBoxI[]>>(APIRoutes.getChatBox, this.headerOption).then(
+      (res) => {
+        this.chatBoxList = res.iterableData;
       }
     )
+    // this.chatBoxList.map(
+    //   (chat: ChatBoxI, i: number) => {
+    //     if (chat.employeeId == data.id) {
+    //       chat.newMessages++;
+    //       chat.lastMessage = data.data;
+    //       const newChat = chat;
+    //       this.chatBoxList.splice(i, 1);
+    //       this.chatBoxList.unshift(newChat);
+    //     }
+    //     else {
+    //       if (chat.recieverId == data.id) {
+    //         console.log(chat);
+    //         chat.newMessages++;
+    //         chat.lastMessage = data.data;
+    //         const newChat = chat;
+    //         this.chatBoxList.splice(i, 1);
+    //         this.chatBoxList.unshift(newChat);
+    //       }
+    //     }
+    //   }
+    // )
   }
 
   @HostListener('document:click', ['$event'])
