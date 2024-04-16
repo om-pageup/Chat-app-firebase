@@ -95,38 +95,11 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
       }
     )
 
-    this._utilService.updateNameInChat.subscribe(
-      (res) => {
-        this.Name = res;
-      }
-    );
-
-    // this._utilService.showSearchedChatE.subscribe(
-    //   (id: number) => {
-    //     this.options.index = 0;
-    //     this.postAPICallPromise<GetMessagePaginationI, GetMessageI<MessageI[]>>(APIRoutes.getMessageById(id), this.options, this.headerOption).then(
-    //       (res) => {
-    //         this.showChatMessages = true;
-    //         this.isSearchedUserChat = false;
-    //         this.messageList = res.data.data;
-    //         this.receiverStystemToken = res.data.systemToken;
-    //         this.isScrollToBottom = true;
-    //       }
-    //     )
+    // this._utilService.updateNameInChat.subscribe(
+    //   (res) => {
+    //     this.Name = res;
     //   }
-    // )
-
-    // this._utilService.showSearchedUserNameInChatHeaderE.subscribe(
-    //   (user: IGetAllUser) => {
-    //     this.messageList = [];
-    //     this.recevierId = user.id;
-    //     this._utilService.currentOpenedChat = user.id;
-    //     this.searchedUserChat = user;
-    //     this.Name = user.employeeName;
-    //     this.isSearchedUserChat = true;
-    //     this.showChatMessages = true;
-    //   }
-    // )
+    // );
 
     this._utilService.userChatEmitter.subscribe((res) => {
       this.recevierId = res.id;
@@ -205,7 +178,6 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
   public onScrollUp(event: Event) {
     const scrolltop = this.scrollFrame.nativeElement.scrollTop;
     if (scrolltop == 0 && !this.isSearchedUserChat) {
-    // if (scrolltop == 0) {
       this.options.index++;
       this.getChatById();
     }

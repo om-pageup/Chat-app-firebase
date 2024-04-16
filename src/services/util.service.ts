@@ -14,19 +14,16 @@ export class UtilService extends ComponentBase {
   public sendMessageE: EventEmitter<boolean> = new EventEmitter<boolean>();
   public isListennotificationE: EventEmitter<number> = new EventEmitter<number>();
   public getChatByIdE: EventEmitter<number> = new EventEmitter<number>();
-  public updateNameInChat: EventEmitter<string> = new EventEmitter<string>();
+  // public updateNameInChat: EventEmitter<string> = new EventEmitter<string>();
 
   public chatClickedE: EventEmitter<number> = new EventEmitter<number>();
   public increaseChatCountE: EventEmitter<NumberString> = new EventEmitter<NumberString>();
   public showUser: EventEmitter<boolean> = new EventEmitter<boolean>();
-  public showSearchedUserNameInChatHeaderE: EventEmitter<IGetAllUser> = new EventEmitter<IGetAllUser>();
-  public showSearchedChatE: EventEmitter<number> = new EventEmitter<number>();
   public refreshChatListE: EventEmitter<boolean> = new EventEmitter<boolean>();
   public updateChatWhenSendingE: EventEmitter<string> = new EventEmitter<string>();
   
   public userChatEmitter : EventEmitter<{id: number, name: string}> = new EventEmitter<{id: number, name: string}>();
 
-  // public unreadMsgCount: number = 0;
   public isAlreadyExists: boolean = false;
   public loggedInUserId: number = -1;
   public loggedInUserName: string = "";

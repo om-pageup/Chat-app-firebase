@@ -20,7 +20,7 @@
             aria-current="true">
 
             @if (_utilService.loggedInUserId != chat.recieverId) {
-            <div (click)="getChats(chat.recieverId,chat.recieverName, i)" class="show-option">
+            <div (click)="getChats(chat.recieverId,chat.recieverName, chat)" class="show-option">
                 <div class="d-flex w-100 justify-content-between">
                     <h5 class="mb-1">{{chat.recieverName}}, {{chat.recieverId}}</h5>
 
@@ -46,9 +46,9 @@
             </div>
             }
             @else {
-            <div (click)="getChats(chat.employeeId,chat.employeeName, i)" class="show-option">
+            <div (click)="getChats(chat.employeeId,chat.employeeName, chat)" class="show-option">
                 <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">{{chat.employeeName}} , {{chat.employeeId}}</h5>
+                    <h5 class="mb-1">{{chat.employeeName}} , {{chat.employeeId}} </h5>
                     <span *ngIf="(chat.newMessages > 0) && (chat.employeeId != _utilService.loggedInUserId)" class="badge bg-primary rounded-pill">{{chat.newMessages}}</span>
                 </div>
                 <div class="d-flex justify-content-between">
