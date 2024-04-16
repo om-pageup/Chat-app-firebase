@@ -140,12 +140,14 @@ export class ChatListComponent extends ComponentBase implements OnInit, OnDestro
 
 
   private increaseChatCntOnSendingF(str: string) {
+    const currentDateUTC = new Date().toISOString();
     let isChatExists = false;
     this.chatBoxList.map(
       (chat: ChatBoxI, i: number) => {
         if (chat.employeeId == this._utilService.currentOpenedChat) {
           isChatExists = true;
           chat.lastMessage = str;
+          chat.lastMessageDate = currentDateUTC;
 
           const newChat = chat;
           this.chatBoxList.splice(i, 1);
@@ -154,6 +156,7 @@ export class ChatListComponent extends ComponentBase implements OnInit, OnDestro
         else {
           if (chat.recieverId == this._utilService.currentOpenedChat) {
             chat.lastMessage = str;
+            chat.lastMessageDate = currentDateUTC;
             isChatExists = true;
             const newChat = chat;
             this.chatBoxList.splice(i, 1);
