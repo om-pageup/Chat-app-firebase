@@ -15,8 +15,13 @@
                 <i data-bs-toggle="dropdown" aria-expanded="false" class='bx bx-menu c-p-s'></i>
                 <ul class="dropdown-menu">
                     <li (click)="blockUser()">
+
                         <i class='bx bx-block'></i>
                         {{userBlockState}}
+                        <!-- <input id="file-upload" type="file" (change)="onDocumentSelect($event)"
+                                [formControl]="documentFormControl"
+                                accept=".xlsx,.xls,.doc, .docx,.ppt, .pptx,.pdf" /> -->
+
                     </li>
                 </ul>
             </div>
@@ -27,8 +32,15 @@
         <div class="chat-container" #scrollframe (scroll)="onScrollUp($event)">
 
             <ng-container *ngFor="let chats of messageList; let i=index" #item>
-                <!-- <div class="message-box friend-message" *ngIf="recevierId == chats.senderId"> -->
-                <div class="message-box friend-message" *ngIf="_utilService.loggedInUserId != chats.senderId">
+
+
+                <ng-container *ngIf="i == 0 || (messageList[i].messageDate |date: 'dd/MM/yyyy') != (messageList[i-1].messageDate | date: 'dd/MM/yyyy')">
+                    <div class="groupByDate">
+                        <small class="showDay">{{ chats.messageDate | timeAgo }}</small>
+                    </div>
+                </ng-container>
+
+                <div class="message-box friend-message" *ngIf="recevierId == chats.senderId">
                     <p style="word-wrap: break-word;">{{chats.message}}
                         <br>
                         <span>

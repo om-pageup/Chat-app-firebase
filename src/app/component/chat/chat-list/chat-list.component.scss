@@ -11,7 +11,6 @@
 
 .chat-list{
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-    height: 100%;
     padding: 10px;
 }
 
@@ -34,7 +33,6 @@
     cursor: pointer;
 }
 
-
 .show-option .bx-chevron-down {
     display: none;
 }
@@ -51,6 +49,8 @@
 
 .bx-chevron-down:hover .dropdown-menu {
     display: block;
+    right: 0;
+    // position: fixed;
 }
 
 .dropdown-menu{

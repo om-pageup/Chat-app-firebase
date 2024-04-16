@@ -48,6 +48,7 @@
     /*60+60*/
     padding: 50px;
     overflow-y: scroll;
+    scrollbar-width: thin;
 
   }
 
@@ -149,7 +150,7 @@
   }
 }
 
-.fileover{
+.fileover {
 
   // background-color: #FFF;
   opacity: 0.5;
@@ -265,6 +266,21 @@ input[type="file"] {
   border: 1px solid #cabebe;
 }
 
-.c-p{
+.c-p {
   cursor: pointer;
+}
+
+.groupByDate {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  .showDay{
+    padding: 5px;
+    color: #54656f;
+    background-color: rgba(255, 255, 255, .95);
+    border-radius: 4px;
+    
+  }
 }
