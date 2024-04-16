@@ -101,32 +101,53 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
       }
     );
 
-    this._utilService.showSearchedChatE.subscribe(
-      (id: number) => {
-        this.options.index = 0;
-        this.postAPICallPromise<GetMessagePaginationI, GetMessageI<MessageI[]>>(APIRoutes.getMessageById(id), this.options, this.headerOption).then(
-          (res) => {
-            this.showChatMessages = true;
-            this.isSearchedUserChat = false;
-            this.messageList = res.data.data;
-            this.receiverStystemToken = res.data.systemToken;
-            this.isScrollToBottom = true;
-          }
-        )
-      }
-    )
+    // this._utilService.showSearchedChatE.subscribe(
+    //   (id: number) => {
+    //     this.options.index = 0;
+    //     this.postAPICallPromise<GetMessagePaginationI, GetMessageI<MessageI[]>>(APIRoutes.getMessageById(id), this.options, this.headerOption).then(
+    //       (res) => {
+    //         this.showChatMessages = true;
+    //         this.isSearchedUserChat = false;
+    //         this.messageList = res.data.data;
+    //         this.receiverStystemToken = res.data.systemToken;
+    //         this.isScrollToBottom = true;
+    //       }
+    //     )
+    //   }
+    // )
 
-    this._utilService.showSearchedUserNameInChatHeaderE.subscribe(
-      (user: IGetAllUser) => {
-        this.recevierId = user.id;
-        this._utilService.currentOpenedChat = user.id;
-        this.messageList = [];
-        this.searchedUserChat = user;
-        this.Name = user.employeeName;
-        this.isSearchedUserChat = true;
-        this.showChatMessages = true;
-      }
-    )
+    // this._utilService.showSearchedUserNameInChatHeaderE.subscribe(
+    //   (user: IGetAllUser) => {
+    //     this.messageList = [];
+    //     this.recevierId = user.id;
+    //     this._utilService.currentOpenedChat = user.id;
+    //     this.searchedUserChat = user;
+    //     this.Name = user.employeeName;
+    //     this.isSearchedUserChat = true;
+    //     this.showChatMessages = true;
+    //   }
+    // )
+
+    this._utilService.userChatEmitter.subscribe((res) => {
+      this.recevierId = res.id;
+      this._utilService.currentOpenedChat = res.id;
+      this.options.index = 0;
+      this.Name = res.name;
+      this.postAPICallPromise<GetMessagePaginationI, GetMessageI<MessageI[]>>(APIRoutes.getMessageById(res.id), this.options, this.headerOption).then(
+        (res) => {
+          this.showChatMessages = true;
+          this.messageList = res.data.data;
+          this.receiverStystemToken = res.data.systemToken;
+          this.isScrollToBottom = true;
+          if (res.data.isBlockedUser) {
+            this.userBlockState = "Unblock"
+          }
+          else {
+            this.userBlockState = "Block"
+          }
+        }
+      )
+    })
   }
 
   ngAfterViewInit() {
@@ -184,6 +205,7 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
   public onScrollUp(event: Event) {
     const scrolltop = this.scrollFrame.nativeElement.scrollTop;
     if (scrolltop == 0 && !this.isSearchedUserChat) {
+    // if (scrolltop == 0) {
       this.options.index++;
       this.getChatById();
     }
@@ -304,7 +326,6 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
           this.messageList = res.data.data;
           this.receiverStystemToken = res.data.systemToken;
           this.isScrollToBottom = true;
-          console.log(res);
           if (res.data.isBlockedUser) {
             this.userBlockState = "Unblock"
           }

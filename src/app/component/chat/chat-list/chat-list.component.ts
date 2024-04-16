@@ -1,13 +1,13 @@
 import { Component, ElementRef, HostListener, OnDestroy, OnInit } from '@angular/core';
-import { ChatBoxC, ChatBoxI } from '../../../model/chat.model';
-import { ResponseGI, ResponseIterableI } from '../../../response/responseG.response';
+import { ChatBoxI } from '../../../model/chat.model';
+import { ResponseIterableI } from '../../../response/responseG.response';
 import { ComponentBase } from '../../../shared/class/ComponentBase.class';
 import { UtilService } from '../../../../services/util.service';
 import { APIRoutes } from '../../../shared/constants/apiRoutes.constant';
 import { NumberString } from '../../../model/util.model';
-import { IGetAllUser, UserI } from '../../../response/user.response';
+import { IGetAllUser } from '../../../response/user.response';
 import { IEmplyeeOptions } from '../../../model/option.model';
-import { Observable, Subject, debounceTime, distinctUntilChanged, switchMap, takeUntil } from 'rxjs';
+import { Subject, debounceTime, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-chat-list',
@@ -31,12 +31,10 @@ export class ChatListComponent extends ComponentBase implements OnInit, OnDestro
     orders: 0,
     orderBy: ""
   }
-  // private getSearchedUser!: Observable<ResponseIterableI<IGetAllUser[]>>;
 
-  constructor(public _utilService: UtilService, private elementRef: ElementRef) {
+  constructor(public _utilService: UtilService) {
     super();
 
-    // this.getSearchedUser = this._httpClient.post<ResponseIterableI<IGetAllUser[]>>(`${this.baseUrl}${APIRoutes.getAllEmployee}`, this.options);
 
     this._utilService.refreshChatListE.subscribe(
       (res) => {
@@ -66,7 +64,7 @@ export class ChatListComponent extends ComponentBase implements OnInit, OnDestro
 
 
     this.userSearchSubject.pipe(
-      debounceTime(2000),
+      debounceTime(0),
     ).subscribe(
       (userName) => {
         this.onDestroy$.next();
@@ -83,13 +81,13 @@ export class ChatListComponent extends ComponentBase implements OnInit, OnDestro
   }
 
 
-  public getChats(id: number, allChat: string, index: number) {
+  public getChats(id: number, name: string, index: number) {
 
-    this.chatBoxList[index].newMessages = 0;
-    this._utilService.currentOpenedChat = id;
-    this._utilService.chatClickedE.emit(id);
-    // to display name in chat header
-    this._utilService.updateNameInChat.emit(allChat);
+    const userChat: { id: number, name: string } = {
+      id,
+      name
+    }
+    this._utilService.userChatEmitter.emit(userChat);
   }
 
   public onArrowDown() {
@@ -107,39 +105,20 @@ export class ChatListComponent extends ComponentBase implements OnInit, OnDestro
     }
   }
   public onEnter() {
-    this.getSearchedUserChats(this.searchResult[this.selectedIndex]);
+    this.getChats(this.searchResult[this.selectedIndex].id, this.searchResult[this.selectedIndex].employeeName, this.selectedIndex)
+    this.searchResult = [];
+    this.searchUser = "";
     this.selectedIndex = -1;
   }
 
   public getSearchedUserChats(user: IGetAllUser) {
+    const obj: { id: number, name: string } = {
+      id: user.id,
+      name: user.employeeName
+    }
+    this._utilService.userChatEmitter.emit(obj);
     this.searchResult = [];
     this.searchUser = "";
-
-    let isAlreadyExists: boolean = false;
-    for (let userChats of this.chatBoxList) {
-      if (userChats.recieverId == user.id) {
-        isAlreadyExists = true;
-        this._utilService.isAlreadyExists = true;
-        this._utilService.showSearchedChatE.emit(user.id);
-        this._utilService.updateNameInChat.emit(userChats.recieverName);
-        this._utilService.currentOpenedChat = user.id;
-        break;
-      }
-      else if (userChats.employeeId == user.id) {
-        this._utilService.isAlreadyExists = true;
-        isAlreadyExists = true;
-        this._utilService.showSearchedChatE.emit(user.id);
-        this._utilService.updateNameInChat.emit(userChats.employeeName);
-        this._utilService.currentOpenedChat = user.id;
-        break;
-      }
-      else {
-        this._utilService.isAlreadyExists = false;
-      }
-    }
-    if (!isAlreadyExists) {
-      this._utilService.showSearchedUserNameInChatHeaderE.emit(user);
-    }
   }
 
   public onSearch() {

@@ -7,42 +7,28 @@
             <div>
                 <ng-container>
                     <h5>{{Name}}</h5>
-                    <!-- <small>Online</small> -->
                 </ng-container>
             </div>
         </div>
         <div class="col-1 option-bar">
-            <!-- <i class='bx bx-menu'></i> -->
             <div class="btn-group dropup">
                 <i data-bs-toggle="dropdown" aria-expanded="false" class='bx bx-menu c-p-s'></i>
                 <ul class="dropdown-menu">
                     <li (click)="blockUser()">
-                      
-                            <i class='bx bx-block'></i>
-                            {{userBlockState}}
-                            <!-- <input id="file-upload" type="file" (change)="onDocumentSelect($event)"
-                                [formControl]="documentFormControl"
-                                accept=".xlsx,.xls,.doc, .docx,.ppt, .pptx,.pdf" /> -->
-                        
+                        <i class='bx bx-block'></i>
+                        {{userBlockState}}
                     </li>
-                    <!-- <li>
-                        <label for="img-upload" class="custom-file-upload">
-                            <i class='bx bx-images'></i>
-                            Photos & Videos
-                            <input id="img-upload" type="file" [formControl]="mediaFormControl"
-                                (change)="onMediaSelect($event)" [value]="" accept="image/*,video/*" />
-                        </label>
-                    </li> -->
                 </ul>
             </div>
         </div>
     </div>
-    <div class="row mx-0 body"  appDnd (fileDropped)="onFileDropped($event)">
-     
+    <div class="row mx-0 body" appDnd (fileDropped)="onFileDropped($event)">
+
         <div class="chat-container" #scrollframe (scroll)="onScrollUp($event)">
 
             <ng-container *ngFor="let chats of messageList; let i=index" #item>
-                <div class="message-box friend-message" *ngIf="recevierId == chats.senderId">
+                <!-- <div class="message-box friend-message" *ngIf="recevierId == chats.senderId"> -->
+                <div class="message-box friend-message" *ngIf="_utilService.loggedInUserId != chats.senderId">
                     <p style="word-wrap: break-word;">{{chats.message}}
                         <br>
                         <span>
@@ -50,7 +36,8 @@
                         </span>
                     </p>
                 </div>
-                <div class="message-box my-message" *ngIf="recevierId != chats.senderId">
+                <!-- <div class="message-box my-message" *ngIf="recevierId != chats.senderId"> -->
+                <div class="message-box my-message" *ngIf="_utilService.loggedInUserId == chats.senderId">
                     <p style="word-wrap: break-word;">
                         {{chats.message}}
                         <i (click)="deleteMessage(chats.id, i)" class='bx bxs-trash c-p-s' style="color: black;"></i>
