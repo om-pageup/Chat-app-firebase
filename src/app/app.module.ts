@@ -21,6 +21,7 @@ import { ConfirmationComponent } from './shared/component/confirmation/confirmat
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { DndDirective } from './shared/directives/dnd.directive';
 import { TimeAgoPipe } from './shared/pipe/time-ago.pipe';
+import { ChatlistTimeAgoPipe } from './shared/pipe/chatlist-time-ago.pipe';
 
 initializeApp(environment.firebase);
 @NgModule({
@@ -35,6 +36,7 @@ initializeApp(environment.firebase);
     ConfirmationComponent,
     DndDirective,
     TimeAgoPipe,
+    ChatlistTimeAgoPipe,
   ],
   imports: [
     BrowserModule,

@@ -27,6 +27,10 @@
                     @if (chat.employeeId != _utilService.loggedInUserId) {
                     <span *ngIf="chat.newMessages > 0" class="badge bg-primary rounded-pill">{{chat.newMessages}}</span>
                     }
+                    @else{
+                    <span class="ss">{{chat.lastMessageDate| chatlistTimeAgo }}</span>
+
+                    }
 
                 </div>
                 <div class="d-flex justify-content-between">

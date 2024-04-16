@@ -2,6 +2,7 @@ export interface ChatBoxI {
     employeeId: number;
     employeeName: string;
     lastMessage: string;
+    lastMessageDate: string;
     isSeen: boolean
     newMessages: number;
     recieverId: number;
@@ -12,6 +13,7 @@ export class ChatBoxC {
     employeeId: number = 0;
     employeeName: string = '';
     lastMessage: string = '';
+    lastMessageDate: string='';    
     isSeen: boolean = false;
     newMessages: number = 0;
     recieverId: number = 0;
