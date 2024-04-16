@@ -27,6 +27,10 @@
                     @if (chat.employeeId != _utilService.loggedInUserId) {
                     <span *ngIf="chat.newMessages > 0" class="badge bg-primary rounded-pill">{{chat.newMessages}}</span>
                     }
+                    @else{
+                    <span class="ss">{{chat.lastMessageDate| chatlistTimeAgo }}</span>
+
+                    }
 
                 </div>
                 <div class="d-flex justify-content-between">
@@ -49,7 +53,8 @@
             <div (click)="getChats(chat.employeeId,chat.employeeName, i)" class="show-option">
                 <div class="d-flex w-100 justify-content-between">
                     <h5 class="mb-1">{{chat.employeeName}} , {{chat.employeeId}}</h5>
-                    <span *ngIf="(chat.newMessages > 0) && (chat.employeeId != _utilService.loggedInUserId)" class="badge bg-primary rounded-pill">{{chat.newMessages}}</span>
+                    <span *ngIf="(chat.newMessages > 0) && (chat.employeeId != _utilService.loggedInUserId)"
+                        class="badge bg-primary rounded-pill">{{chat.newMessages}}</span>
                 </div>
                 <div class="d-flex justify-content-between">
                     @if (chat.lastMessage.length > 30) {

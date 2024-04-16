@@ -45,6 +45,7 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
     employeeId: 0,
     employeeName: '',
     lastMessage: '',
+    lastMessageDate: '',
     isSeen: false,
     newMessages: 0,
     recieverId: 0,
@@ -203,9 +204,10 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
   }
 
   public onScrollUp(event: Event) {
+    console.log(event);
+    
     const scrolltop = this.scrollFrame.nativeElement.scrollTop;
     if (scrolltop == 0 && !this.isSearchedUserChat) {
-    // if (scrolltop == 0) {
       this.options.index++;
       this.getChatById();
     }
@@ -233,7 +235,6 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
   }
 
   public blockUser() {
-
     if (this.userBlockState == "Block") {
       let message = "Blocked contacts will no longer be able to send you message";
       this.ConfirmationComponentObj.openModal(`${this.userBlockState}`, message).then(
@@ -291,6 +292,7 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
       top: this.scrollContainer.scrollHeight,
       left: 0,
     });
+    this.preScrollH = this.scrollContainer.scrollHeight;
   }
 
   private scrollToHalf(): void {
