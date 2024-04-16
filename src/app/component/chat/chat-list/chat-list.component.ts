@@ -47,7 +47,7 @@ export class ChatListComponent extends ComponentBase implements OnInit, OnDestro
       }
     )
 
-    _utilService.updateChatWhenSendingE.subscribe((msg: string) => {
+    this._utilService.updateChatWhenSendingE.subscribe((msg: string) => {
       this.increaseChatCntOnSendingF(msg);
     })
   }
@@ -81,12 +81,12 @@ export class ChatListComponent extends ComponentBase implements OnInit, OnDestro
   }
 
 
-  public getChats(id: number, name: string, index: number) {
-
+  public getChats(id: number, name: string, chat: ChatBoxI) {
     const userChat: { id: number, name: string } = {
       id,
       name
     }
+    chat.newMessages = 0;
     this._utilService.userChatEmitter.emit(userChat);
   }
 
@@ -105,7 +105,11 @@ export class ChatListComponent extends ComponentBase implements OnInit, OnDestro
     }
   }
   public onEnter() {
-    this.getChats(this.searchResult[this.selectedIndex].id, this.searchResult[this.selectedIndex].employeeName, this.selectedIndex)
+    const userChat: { id: number, name: string } = {
+      id: this.searchResult[this.selectedIndex].id,
+      name: this.searchResult[this.selectedIndex].employeeName
+    }
+    this._utilService.userChatEmitter.emit(userChat);
     this.searchResult = [];
     this.searchUser = "";
     this.selectedIndex = -1;
@@ -116,6 +120,7 @@ export class ChatListComponent extends ComponentBase implements OnInit, OnDestro
       id: user.id,
       name: user.employeeName
     }
+
     this._utilService.userChatEmitter.emit(obj);
     this.searchResult = [];
     this.searchUser = "";
@@ -135,10 +140,11 @@ export class ChatListComponent extends ComponentBase implements OnInit, OnDestro
 
 
   private increaseChatCntOnSendingF(str: string) {
-    console.log(str, this._utilService.currentOpenedChat);
+    let isChatExists = false;
     this.chatBoxList.map(
       (chat: ChatBoxI, i: number) => {
         if (chat.employeeId == this._utilService.currentOpenedChat) {
+          isChatExists = true;
           chat.lastMessage = str;
 
           const newChat = chat;
@@ -148,7 +154,7 @@ export class ChatListComponent extends ComponentBase implements OnInit, OnDestro
         else {
           if (chat.recieverId == this._utilService.currentOpenedChat) {
             chat.lastMessage = str;
-
+            isChatExists = true;
             const newChat = chat;
             this.chatBoxList.splice(i, 1);
             this.chatBoxList.unshift(newChat);
@@ -156,12 +162,21 @@ export class ChatListComponent extends ComponentBase implements OnInit, OnDestro
         }
       }
     )
+
+    if (!isChatExists) {
+      this.getAPICallPromise<ResponseIterableI<ChatBoxI[]>>(APIRoutes.getChatBox, this.headerOption).then(
+        (res) => {
+          this.chatBoxList = res.iterableData;
+        }
+      )
+    }
   }
 
 
   private increaseChatCountF(data: NumberString) {
     this.chatBoxList.map(
       (chat: ChatBoxI, i: number) => {
+        console.log(chat);
         if (chat.employeeId == data.id) {
           chat.newMessages++;
           chat.lastMessage = data.data;

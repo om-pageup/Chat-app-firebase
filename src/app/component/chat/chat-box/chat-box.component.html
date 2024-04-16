@@ -15,13 +15,8 @@
                 <i data-bs-toggle="dropdown" aria-expanded="false" class='bx bx-menu c-p-s'></i>
                 <ul class="dropdown-menu">
                     <li (click)="blockUser()">
-
                         <i class='bx bx-block'></i>
                         {{userBlockState}}
-                        <!-- <input id="file-upload" type="file" (change)="onDocumentSelect($event)"
-                                [formControl]="documentFormControl"
-                                accept=".xlsx,.xls,.doc, .docx,.ppt, .pptx,.pdf" /> -->
-
                     </li>
                 </ul>
             </div>
@@ -34,7 +29,8 @@
             <ng-container *ngFor="let chats of messageList; let i=index" #item>
 
 
-                <ng-container *ngIf="i == 0 || (messageList[i].messageDate |date: 'dd/MM/yyyy') != (messageList[i-1].messageDate | date: 'dd/MM/yyyy')">
+                <ng-container
+                    *ngIf="i == 0 || (messageList[i].messageDate |date: 'dd/MM/yyyy') != (messageList[i-1].messageDate | date: 'dd/MM/yyyy')">
                     <div class="groupByDate">
                         <small class="showDay">{{ chats.messageDate | timeAgo }}</small>
                     </div>
@@ -48,7 +44,6 @@
                         </span>
                     </p>
                 </div>
-                <!-- <div class="message-box my-message" *ngIf="recevierId != chats.senderId"> -->
                 <div class="message-box my-message" *ngIf="_utilService.loggedInUserId == chats.senderId">
                     <p style="word-wrap: break-word;">
                         {{chats.message}}
@@ -62,12 +57,6 @@
         </div>
 
         <div class="row mx-0 footer">
-            <!-- <div class="row mx-0" >
-                drop your files here
-                <input type="file" #fileDropRef id="fileDropRef" />
-
-            </div> -->
-
             <div *ngIf="userBlockState=='Block'" class="row-mx-0">
                 <div class="message-box">
                     <i class='bx bx-smile' (click)="toggleEmojiPicker()"></i>
@@ -75,7 +64,6 @@
                         <emoji-mart class="emoji-mart" *ngIf="showEmojiPicker" (emojiSelect)="addEmoji($event)"
                             title="Pick your emoji…"></emoji-mart>
                     </div>
-
 
                     <div class="btn-group dropup">
                         <i data-bs-toggle="dropdown" aria-expanded="false" class='bx bx-plus'></i>
