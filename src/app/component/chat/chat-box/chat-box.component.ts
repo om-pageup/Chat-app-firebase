@@ -204,8 +204,6 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
   }
 
   public onScrollUp(event: Event) {
-    console.log(event);
-    
     const scrolltop = this.scrollFrame.nativeElement.scrollTop;
     if (scrolltop == 0 && !this.isSearchedUserChat) {
       this.options.index++;
