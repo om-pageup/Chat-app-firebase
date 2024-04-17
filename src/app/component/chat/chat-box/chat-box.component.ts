@@ -153,6 +153,12 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
     )
   }
 
+  
+  public onEnterKeyDown(event: any) {
+    event.preventDefault(); // Prevent default Enter key behavior
+    this.sendMessage(); // Call your sendMessage function
+  }
+
   public sendMessage() {
     this.showEmojiPicker = false;
     this.options.index = 0;
@@ -320,6 +326,7 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
     this.message = text;
   }
 
+
   @HostListener('document:click', ['$event'])
   public handleClick(event: MouseEvent) {
     const clickedElement = event.target as HTMLElement;
@@ -329,6 +336,7 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
       this.showEmojiPicker = false;
     }
   }
+
 }
 
 
