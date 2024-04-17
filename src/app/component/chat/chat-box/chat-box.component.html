@@ -59,14 +59,22 @@
             </div>
 
             <div class="row mx-0 footer">
-                <div *ngIf="userBlockState=='Block'" class="row-mx-0">
+                <div *ngIf="userBlockState=='Block'" class="row-mx-0" style="width: 100%; margin: auto;">
+                    @if (selectedFileName != "") {
+                    <div class="selected-file">
+                        <div class="selected-file-div-s">
+                            {{selectedFileName}}
+                            <i class='bx bx-x c-p' style="color: red;"
+                                (click)='selectedFileName="" || selectedDocument="" || selectedMedia=""'></i>
+                        </div>
+                    </div>
+                    }
                     <div class="message-box">
                         <i class='bx bx-smile' (click)="toggleEmojiPicker()"></i>
                         <div class="emoji-container">
                             <emoji-mart class="emoji-mart" *ngIf="showEmojiPicker" (emojiSelect)="addEmoji($event)"
                                 title="Pick your emoji…"></emoji-mart>
                         </div>
-
                         <div class="btn-group dropup">
                             <i data-bs-toggle="dropdown" aria-expanded="false" class='bx bx-plus'></i>
                             <ul class="dropdown-menu ">
@@ -91,20 +99,10 @@
                             </ul>
                         </div>
 
+                        <!-- <input type="text" placeholder="Type a message" [(ngModel)]="message"
+                            (keydown.enter)="sendMessage()"> -->
 
-                        @if (selectedFileName != "") {
-                        <div class="selected-file-div-s">
-                            {{selectedFileName}}
-                            <i class='bx bx-x c-p' style="color: red;"
-                                (click)='selectedFileName="" || selectedDocument="" || selectedMedia=""'></i>
-                        </div>
-                        }
-
-
-
-                        <input type="text" placeholder="Type a message" [(ngModel)]="message"
-                            (keydown.enter)="sendMessage()">
-
+                        <textarea rows="1" [(ngModel)]="message" (keydown.enter)="onEnterKeyDown($event)"></textarea>
                         <i class='bx bx-send' (click)="sendMessage()"></i>
                     </div>
                 </div>
