@@ -42,6 +42,7 @@
                             <br>
                             <span>
                                 {{ chats.messageDate| utcToIndianTime }}
+                               
                             </span>
                         </p>
                     </div>
@@ -52,6 +53,8 @@
                                 style="color: black;"></i>
                             <span>
                                 {{ chats.messageDate| utcToIndianTime }}
+                                <i *ngIf="!chats.isSeen" style="color: rgb(51, 51, 51); font-size: 15px;" class='bx bx-check'></i>
+                                <i *ngIf="chats.isSeen" style="color: blue; font-size: 15px;" class='bx bx-check-double' ></i>
                             </span>
                         </p>
                     </div>
