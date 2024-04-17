@@ -1,6 +1,6 @@
 export interface ChatBoxI {
-    employeeId: number;
-    employeeName: string;
+    // employeeId: number;
+    // employeeName: string;
     lastMessage: string;
     lastMessageDate: string;
     isSeen: boolean

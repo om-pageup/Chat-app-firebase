@@ -44,20 +44,17 @@ export class FirebaseService extends ComponentBase {
     onMessage(messaging, (payload) => {
 
       const nofication = payload as NotificationResponse;
-      console.log('Message received. ', payload);
-
       const senderID: number = parseInt(nofication.data['gcm.notification.userId']);
-
       const data: NumberString = {
         id: senderID,
         data: nofication.notification.body
       }
 
       if (this._utilService.currentOpenedChat == senderID) {
-        this._utilService.isListennotificationE.emit(senderID);
+        this._utilService.isListennotificationE.emit(data);
       }
       else {
-        this._utilService.increaseChatCountE.emit(data);
+        this._utilService.updateChatOnNotificationE.emit(data);
       }
     });
   }

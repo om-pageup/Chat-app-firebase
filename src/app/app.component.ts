@@ -26,10 +26,9 @@ export class AppComponent extends ComponentBase implements OnInit {
     this.firebaseService.listen();
 
     this._utilService.showUser.subscribe(
-      (id: number) => {
-        if (id) {
+      (val: boolean) => {
+        if (val) {
           this.showChatMessages = true;
-          // this.getLoggedInUserId();
          }
         else
           this.showChatMessages = false;

@@ -11,6 +11,7 @@ import { HttpClient } from '@angular/common/http';
 import { ConfirmationComponent } from '../../../shared/component/confirmation/confirmation.component';
 import { FormControl } from '@angular/forms';
 import { ConvertToBase } from '../../../shared/class/ConvertoBase64.class';
+import { NumberString } from '../../../model/util.model';
 
 @Component({
   selector: 'app-chat-box',
@@ -42,8 +43,8 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
   public message: string = '';
   private receiverStystemToken: string = '';
   public userDetail: ChatBoxI = {
-    employeeId: 0,
-    employeeName: '',
+    // employeeId: 0,
+    // employeeName: '',
     lastMessage: '',
     lastMessageDate: '',
     isSeen: false,
@@ -91,16 +92,10 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
     )
 
     this._utilService.isListennotificationE.subscribe(
-      (receiverId: number) => {
-        this.getChatByIdListen(receiverId);
+      (data: NumberString) => {
+        this.getChatByIdListen(data.id);
       }
     )
-
-    // this._utilService.updateNameInChat.subscribe(
-    //   (res) => {
-    //     this.Name = res;
-    //   }
-    // );
 
     this._utilService.userChatEmitter.subscribe((res) => {
       this.recevierId = res.id;
@@ -162,12 +157,16 @@ export class ChatBoxComponent extends ComponentBase implements OnInit, AfterView
       const data: { message: string } = {
         message: this.message.trim()
       }
+
       this.postAPICallPromise<{ message: string }, GetLoggedInUserDetailI<null>>(APIRoutes.sendMessage(this.recevierId), data, this.headerOption).then(
-        (res) => {
-          this._utilService.updateChatWhenSendingE.emit(data.message);
-          if (this.isSearchedUserChat) {
+        () => {
+          if (this._utilService.isUserChatAlreadyExists) {
+            this._utilService.updateChatOnSendingMsgE.emit(data.message);
+          }
+          else {
             this._utilService.refreshChatListE.emit(true);
           }
+          
           this.getChatByIdListen(this.recevierId);
           this.firebaseService.sendNotification({ receiverSystemToken: this.receiverStystemToken, title: "WhatsApp", body: data.message }, this._utilService.loggedInUserId);
         }

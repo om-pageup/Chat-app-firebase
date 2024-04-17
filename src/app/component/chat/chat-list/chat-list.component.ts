@@ -16,7 +16,7 @@ import { Subject, debounceTime, takeUntil } from 'rxjs';
 })
 export class ChatListComponent extends ComponentBase implements OnInit, OnDestroy {
 
-  public chatBoxList: ChatBoxI[] = [];
+  public userChatList: ChatBoxI[] = [];
   public allUserList: IGetAllUser[] = [];
   public searchResult: IGetAllUser[] = [];
   public searchUser: string = "";
@@ -41,14 +41,21 @@ export class ChatListComponent extends ComponentBase implements OnInit, OnDestro
         this.getChatBox();
       }
     )
-    this._utilService.increaseChatCountE.subscribe(
+
+    this._utilService.isListennotificationE.subscribe(
+      (data: NumberString) => {
+        this.updateOpenedChat(data);
+      }
+    )
+
+    this._utilService.updateChatOnNotificationE.subscribe(
       (data: NumberString) => {
         this.increaseChatCountF(data);
       }
     )
 
-    this._utilService.updateChatWhenSendingE.subscribe((msg: string) => {
-      this.increaseChatCntOnSendingF(msg);
+    this._utilService.updateChatOnSendingMsgE.subscribe((msg: string) => {
+      this.updateChatOnSendingMsgF(msg);
     })
   }
 
@@ -82,11 +89,12 @@ export class ChatListComponent extends ComponentBase implements OnInit, OnDestro
 
 
   public getChats(id: number, name: string, chat: ChatBoxI) {
+    chat.newMessages = 0;
     const userChat: { id: number, name: string } = {
       id,
       name
     }
-    chat.newMessages = 0;
+    this._utilService.isUserChatAlreadyExists = true;
     this._utilService.userChatEmitter.emit(userChat);
   }
 
@@ -104,21 +112,29 @@ export class ChatListComponent extends ComponentBase implements OnInit, OnDestro
       this.selectedIndex--;
     }
   }
-  public onEnter() {
-    const userChat: { id: number, name: string } = {
-      id: this.searchResult[this.selectedIndex].id,
-      name: this.searchResult[this.selectedIndex].employeeName
-    }
-    this._utilService.userChatEmitter.emit(userChat);
+
+  public onEnterPress() {
+    this.getSearchedUserChats(this.searchResult[this.selectedIndex].id, this.searchResult[this.selectedIndex].employeeName);
     this.searchResult = [];
     this.searchUser = "";
     this.selectedIndex = -1;
   }
 
-  public getSearchedUserChats(user: IGetAllUser) {
+  public getSearchedUserChats(id: number, name: string) {
+
     const obj: { id: number, name: string } = {
-      id: user.id,
-      name: user.employeeName
+      id,
+      name
+    }
+
+    for (let i = 0; i < this.userChatList.length; i++) {
+      if (this.userChatList[i].recieverId == obj.id) {
+        this._utilService.isUserChatAlreadyExists = true;
+        break;
+      }
+      else {
+        this._utilService.isUserChatAlreadyExists = false;
+      }
     }
 
     this._utilService.userChatEmitter.emit(obj);
@@ -126,84 +142,77 @@ export class ChatListComponent extends ComponentBase implements OnInit, OnDestro
     this.searchUser = "";
   }
 
-  public onSearch() {
+  public onSearchUser() {
     this.userSearchSubject.next(this.searchUser);
   }
 
   private getChatBox() {
     this.getAPICallPromise<ResponseIterableI<ChatBoxI[]>>(APIRoutes.getChatBox, this.headerOption).then(
       (res) => {
-        this.chatBoxList = res.iterableData;
+        this.userChatList = res.iterableData;
       }
     )
   }
 
 
-  private increaseChatCntOnSendingF(str: string) {
-    const currentDateUTC = new Date().toISOString();
-    let isChatExists = false;
-    this.chatBoxList.map(
-      (chat: ChatBoxI, i: number) => {
-        if (chat.employeeId == this._utilService.currentOpenedChat) {
-          isChatExists = true;
-          chat.lastMessage = str;
-          chat.lastMessageDate = currentDateUTC;
+  private updateChatOnSendingMsgF(msg: string) {
+    this.updateChatG(this._utilService.currentOpenedChat, msg);
 
-          const newChat = chat;
-          this.chatBoxList.splice(i, 1);
-          this.chatBoxList.unshift(newChat);
-        }
-        else {
-          if (chat.recieverId == this._utilService.currentOpenedChat) {
-            chat.lastMessage = str;
-            chat.lastMessageDate = currentDateUTC;
-            isChatExists = true;
-            const newChat = chat;
-            this.chatBoxList.splice(i, 1);
-            this.chatBoxList.unshift(newChat);
-          }
-        }
-      }
-    )
-
-    if (!isChatExists) {
-      this.getAPICallPromise<ResponseIterableI<ChatBoxI[]>>(APIRoutes.getChatBox, this.headerOption).then(
-        (res) => {
-          this.chatBoxList = res.iterableData;
-        }
-      )
-    }
-  }
-
-
-  private increaseChatCountF(data: NumberString) {
-    this.getAPICallPromise<ResponseIterableI<ChatBoxI[]>>(APIRoutes.getChatBox, this.headerOption).then(
-      (res) => {
-        this.chatBoxList = res.iterableData;
-      }
-    )
-    // this.chatBoxList.map(
-    //   (chat: ChatBoxI, i: number) => {
-    //     if (chat.employeeId == data.id) {
-    //       chat.newMessages++;
-    //       chat.lastMessage = data.data;
-    //       const newChat = chat;
-    //       this.chatBoxList.splice(i, 1);
-    //       this.chatBoxList.unshift(newChat);
-    //     }
-    //     else {
-    //       if (chat.recieverId == data.id) {
-    //         console.log(chat);
-    //         chat.newMessages++;
-    //         chat.lastMessage = data.data;
-    //         const newChat = chat;
-    //         this.chatBoxList.splice(i, 1);
-    //         this.chatBoxList.unshift(newChat);
-    //       }
+    // const currentDateUTC = new Date().toISOString();
+    // this.userChatList.forEach(
+    //   (userChat, i) => {
+    //     if (userChat.recieverId == this._utilService.currentOpenedChat) {
+    //       userChat.lastMessage = str;
+    //       userChat.lastMessageDate = currentDateUTC;
+    //       const newChat = userChat;
+    //       this.userChatList.splice(i, 1);
+    //       this.userChatList.unshift(newChat);
     //     }
     //   }
     // )
   }
+
+  private updateOpenedChat(data: NumberString) {
+
+    this.updateChatG(data.id, data.data);
+    // const currentDateUTC = new Date().toISOString();
+    // this.userChatList.forEach(
+    //   (userChat, i) => {
+    //     if (userChat.recieverId == data.id) {
+    //       userChat.lastMessage = data.data;
+    //       userChat.lastMessageDate = currentDateUTC;
+    //       const newChat = userChat;
+    //       this.userChatList.splice(i, 1);
+    //       this.userChatList.unshift(newChat);
+    //     }
+    //   }
+    // )
+  }
+
+  private updateChatG(id: number, data: string) {
+    const currentDateUTC = new Date().toISOString();
+    this.userChatList.forEach(
+      (userChat, i) => {
+        if (userChat.recieverId == id) {
+          userChat.lastMessage = data;
+          userChat.lastMessageDate = currentDateUTC;
+          const newChat = userChat;
+          this.userChatList.splice(i, 1);
+          this.userChatList.unshift(newChat);
+        }
+      }
+    )
+  }
+
+  private increaseChatCountF(data: NumberString) {
+    this.getAPICallPromise<ResponseIterableI<ChatBoxI[]>>(APIRoutes.getChatBox, this.headerOption).then(
+      (res) => {
+        this.userChatList = res.iterableData;
+      }
+    )
+  }
+
+
 
   @HostListener('document:click', ['$event'])
   public handleClick(event: MouseEvent) {

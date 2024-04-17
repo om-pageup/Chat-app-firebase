@@ -12,18 +12,17 @@ import { APIRoutes } from '../app/shared/constants/apiRoutes.constant';
 export class UtilService extends ComponentBase {
 
   public sendMessageE: EventEmitter<boolean> = new EventEmitter<boolean>();
-  public isListennotificationE: EventEmitter<number> = new EventEmitter<number>();
+  public isListennotificationE: EventEmitter<NumberString> = new EventEmitter<NumberString>();
   public getChatByIdE: EventEmitter<number> = new EventEmitter<number>();
 
   public chatClickedE: EventEmitter<number> = new EventEmitter<number>();
-  public increaseChatCountE: EventEmitter<NumberString> = new EventEmitter<NumberString>();
+  public updateChatOnNotificationE: EventEmitter<NumberString> = new EventEmitter<NumberString>();
   public showUser: EventEmitter<boolean> = new EventEmitter<boolean>();
   public refreshChatListE: EventEmitter<boolean> = new EventEmitter<boolean>();
-  public updateChatWhenSendingE: EventEmitter<string> = new EventEmitter<string>();
-  
+  public updateChatOnSendingMsgE: EventEmitter<string> = new EventEmitter<string>();
   public userChatEmitter : EventEmitter<{id: number, name: string}> = new EventEmitter<{id: number, name: string}>();
 
-  public isAlreadyExists: boolean = false;
+  public isUserChatAlreadyExists: boolean = false;
   public loggedInUserId: number = -1;
   public loggedInUserName: string = "";
   public receiverId: number = -1;
